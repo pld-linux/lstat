@@ -84,7 +84,11 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/chkconfig --add lstatd
 if [ -f /var/lock/subsys/lstatd ]; then
         /etc/rc.d/init.d/lstatd restart >&2
+else
+	echo "Run \"/usr/bin/Mkgraph.pl\" to init statistics."
+	echo "Run \"/etc/rc.d/init.d/lstatd start\" to start counting statistics."
 fi
+
 if [ -f %{_sysconfdir}/httpd/httpd.conf ] && \
         ! grep -q "^Include.*/%{name}.conf" %{_sysconfdir}/httpd/httpd.conf; then
                 echo "Include %{_sysconfdir}/httpd/%{name}.conf" >> %{_sysconfdir}/httpd/httpd.conf
