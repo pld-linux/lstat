@@ -19,7 +19,7 @@ BuildRequires:	perl-CGI
 BuildRequires:	rpm-perlprov
 BuildRequires:	rrdtool
 PreReq:		webserver
-PreReq:		perl
+PreReq:		perl-base
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun):	grep
 Requires(preun):	apache
