@@ -7,8 +7,6 @@ Release:	1
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
-Group(de):	Applikationen/Netzwerkwesen
-Group(pl):	Aplikacje/Sieciowe
 Source0:	http://prdownloads.sourceforge.net/lstat/%{name}-%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	%{name}.conf
