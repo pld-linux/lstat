@@ -7,7 +7,7 @@ Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
 Name:		lstat
 Version:	2.3.2
-Release:	5
+Release:	6
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
@@ -30,6 +30,7 @@ Requires(post,preun):	grep
 Requires(preun):	apache
 Requires(preun):	fileutils
 Requires:	apache-mod_auth
+Requires:	apache-mod_dir
 Requires:	apache-mod_perl
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -38,7 +39,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_pkglibdir		/var/lib/%{name}
 %define		_wwwuser		http
 %define		_wwwgroup		http
-%define		_wwwrootdir		/home/services/httpd
+%define		_wwwrootdir		/usr/share
 %define		_httpdconf		/etc/httpd/httpd.conf/httpd.conf
 
 %description
@@ -123,6 +124,17 @@ then
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
+fi
+
+%triggerpostun -- %{name} <= 2.3.3-5
+if [ -s /etc/httpd/httpd.conf/lstat.conf ]; then
+	sed -i -e "s#/home/services/httpd/lstat/#/usr/share/lstat/#g" /etc/httpd/httpd.conf/lstat.conf
+fi
+if [ -s /etc/lstat/config ]; then
+	sed -i -e "s#/home/services/httpd/lstat/#/usr/share/lstat/#g" /etc/lstat/config
+fi
+if [ -s /home/services/httpd/lstat/.htaccess ]; then
+	mv /home/services/httpd/lstat/.htaccess /usr/share/lstat/
 fi
 
 %files
