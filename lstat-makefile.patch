@@ -1,12 +1,12 @@
-diff -urN lstat-2.0BETA2/Makefile.in lstat-2.0BETA2.dzikus/Makefile.in
---- lstat-2.0BETA2/Makefile.in	Mon Nov  5 16:44:51 2001
-+++ lstat-2.0BETA2.dzikus/Makefile.in	Mon Nov 12 09:39:19 2001
-@@ -33,64 +33,42 @@
+diff -urN lstat-2.0/Makefile.in lstat-2.0.chg/Makefile.in
+--- lstat-2.0/Makefile.in	Mon Nov  5 16:44:51 2001
++++ lstat-2.0.chg/Makefile.in	Mon Dec 17 17:19:37 2001
+@@ -33,64 +33,36 @@
  	mkdir -p ${BUILDDIR}/lib
  	${PERL} ./fillvar ${CONFIG} ${SRCDIR} ${BUILDDIR} ${FILES}
  
 -install: install_files mkgraph initrc update_apache_conf
-+install: install_files mkgraph
++install: install_files 
  
  install_files:
  	@echo "Instaling  files..."
@@ -53,19 +53,16 @@ diff -urN lstat-2.0BETA2/Makefile.in lstat-2.0BETA2.dzikus/Makefile.in
 +	${INSTALL} -d $(DESTDIR)${BINDIR}
 +	${INSTALL} -p -m 755 ${BUILDDIR}/lstatd $(DESTDIR)${BINDIR}
 +	${INSTALL} -p -m 755 ${BUILDDIR}/security_lstat $(DESTDIR)${BINDIR}
++	${INSTALL} -p -m 755 ./mkgraph ${DESTDIR}${BINDIR}
  
  
- mkgraph: $(BUILDDIR)
- 	@echo "Creating graph files..."
+-mkgraph: $(BUILDDIR)
+-	@echo "Creating graph files..."
 -	${PERL} ./mkgraph ${CONFIG} ${OBJECTSDIR} ${PAGESDIR}
 -	if [ ! -f ${PAGESDIR}index.pg ]; then \
 -	${INSTALL} -p -m 644 ${SRCDIR}/pages/index.pg ${PAGESDIR};\
 -	${INSTALL} -p -m 644 ${SRCDIR}/pages/user.config ${PAGESDIR};\
-+	${PERL} ./mkgraph ${CONFIG} $(DESTDIR)${OBJECTSDIR} $(DESTDIR)${PAGESDIR}
-+	if [ ! -f $(DESTDIR)${PAGESDIR}index.pg ]; then \
-+	${INSTALL} -p -m 644 ${SRCDIR}/pages/index.pg $(DESTDIR)${PAGESDIR};\
-+	${INSTALL} -p -m 644 ${SRCDIR}/pages/user.config $(DESTDIR)${PAGESDIR};\
- 	fi;
+-	fi;
 -	chown -R $(WWWUSER):$(WWWGROUP) ${PAGESDIR}
 -	chown -R $(WWWUSER):$(WWWGROUP) ${OBJECTSDIR}
  	
