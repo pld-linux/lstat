@@ -25,6 +25,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_initdir		/etc/rc.d/init.d
 %define		_pkglibdir		/var/lib/%{name}
+%define		_wwwuser		http
+%define		_wwwgroup		http
+%define		_wwwrootdir		/home/httpd
+%define		_httpdconf		/etc/httpd/httpd.conf
 
 %description
 LinuxStat is for generating and displaying different statistics of
@@ -52,17 +56,21 @@ parametry systemu.
 
 %build
 ./configure \
+	--apache \
+	--with-httpdconf=%{_httpdconf} \
 	--with-prefix=%{_prefix} \
 	--with-bin=%{_bindir} \
 	--with-lib=%{perl_sitelib} \
 	--with-etc=%{_sysconfdir}/lstat \
-	--with-www=/home/httpd/html/lstat \
+	--with-www=%{_wwwrootdir}/lstat \
 	--with-rrd=%{_pkglibdir}/rrd \
 	--with-pages=%{_pkglibdir}/pages \
 	--with-objects=%{_pkglibdir}/objects \
 	--with-templates=%{_pkglibdir}/templates \
-	--noupdate_apache_conf \
-	--800x600
+	--noupdate_apache_conf
+#	--with-wwwuser=%{_wwwuser} \
+#	--with-wwwgroup=%{_wwwgroup} \
+#	--noupdate_apache_conf \
 
 %{__make}
 
@@ -70,9 +78,7 @@ parametry systemu.
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
-install -D mkgraph $RPM_BUILD_ROOT%{_bindir}/mkgraph
-install -D %{SOURCE1} $RPM_BUILD_ROOT%{_initdir}/lstatd
-install -D %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/%{name}.conf
+#install -D %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/%{name}.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -90,7 +96,9 @@ if [ -f %{_sysconfdir}/httpd/httpd.conf ] && \
 	fi
 fi
 
-/usr/bin/perl %{_bindir}/mkgraph %{_sysconfdir}/httpd/lstat.conf %{_pkglibdir}/objects/ %{_pkglibdir}/pages/
+#/usr/bin/perl %{_bindir}/Mkgraph.pl %{_sysconfdir}/httpd/lstat.conf %{_pkglibdir}/objects/ %{_pkglibdir}/pages/
+
+/usr/bin/perl %{_bindir}/Mkgraph.pl
 
 %preun
 if [ "$1" = 0 ]; then
@@ -112,14 +120,13 @@ fi
 %dir %{_sysconfdir}/lstat
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/lstat/config
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/lstat.conf
-%dir /home/httpd/html/lstat
-%dir /home/httpd/html/lstat/edit
-%attr(755,root,root) %{_bindir}/mkgraph
-%attr(700,http,http) %dir /home/httpd/html/lstat/statimg
-%attr(755,root,root) /home/httpd/html/lstat/edit/edit.cgi
-%attr(755,root,root) /home/httpd/html/lstat/lstat.cgi
-/home/httpd/html/lstat/doc
-/home/httpd/html/lstat/images
+%dir /home/httpd/lstat
+%dir /home/httpd/lstat/edit
+%attr(755,root,root) %{_bindir}/Mkgraph.pl
+%attr(700,http,http) %dir /home/httpd/lstat/statimg
+%attr(755,root,root) /home/httpd/lstat/edit/edit.cgi
+%attr(755,root,root) /home/httpd/lstat/lstat.cgi
+/home/httpd/lstat/doc
 %attr(755,root,root) %{_bindir}/lstatd
 %attr(755,root,root) %{_bindir}/security_lstat
 %{perl_sitelib}/*
