@@ -22,6 +22,7 @@ BuildRequires:	perl
 BuildRequires:	rrdtool
 BuildRequires:	perl-CGI
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+BuildArch:	noarch
 
 %define		_initdir		/etc/rc.d/init.d
 %define		_pkglibdir		/var/lib/%{name}
@@ -68,17 +69,13 @@ parametry systemu.
 	--with-objects=%{_pkglibdir}/objects \
 	--with-templates=%{_pkglibdir}/templates \
 	--noupdate_apache_conf
-#	--with-wwwuser=%{_wwwuser} \
-#	--with-wwwgroup=%{_wwwgroup} \
-#	--noupdate_apache_conf \
-
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
-#install -D %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/%{name}.conf
+install -D %{SOURCE1} $RPM_BUILD_ROOT%{_initdir}/lstatd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -95,10 +92,6 @@ if [ -f %{_sysconfdir}/httpd/httpd.conf ] && \
         	/etc/rc.d/init.d/httpd restart 1>&2
 	fi
 fi
-
-#/usr/bin/perl %{_bindir}/Mkgraph.pl %{_sysconfdir}/httpd/lstat.conf %{_pkglibdir}/objects/ %{_pkglibdir}/pages/
-
-/usr/bin/perl %{_bindir}/Mkgraph.pl
 
 %preun
 if [ "$1" = 0 ]; then
@@ -122,16 +115,20 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/lstat.conf
 %dir /home/httpd/lstat
 %dir /home/httpd/lstat/edit
-%attr(755,root,root) %{_bindir}/Mkgraph.pl
 %attr(700,http,http) %dir /home/httpd/lstat/statimg
 %attr(755,root,root) /home/httpd/lstat/edit/edit.cgi
 %attr(755,root,root) /home/httpd/lstat/lstat.cgi
-/home/httpd/lstat/doc
+/home/httpd/lstat/doc/*
+/home/httpd/lstat/skins/*
+/home/httpd/lstat/icons/*
 %attr(755,root,root) %{_bindir}/lstatd
+%attr(755,root,root) %{_bindir}/show_filters
 %attr(755,root,root) %{_bindir}/security_lstat
+%attr(755,root,root) %{_bindir}/Mkgraph.pl
 %{perl_sitelib}/*
 %dir %{_pkglibdir}/rrd
 %attr(700,http,http) %dir %{_pkglibdir}/objects
 %attr(700,http,http) %dir %{_pkglibdir}/pages
+%attr(700,http,http) %{_pkglibdir}/pages/*
 %dir %{_pkglibdir}/templates
 %{_pkglibdir}/templates/*
