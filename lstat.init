@@ -1,11 +1,11 @@
 #!/bin/sh
 #
-# lstatd       This shell script takes care of starting and stopping
-#              lstat daemon.
+# lstatd	This shell script takes care of starting and stopping
+#		lstat daemon.
 #
-# chkconfig: 2345 85 15
+# chkconfig:	2345 85 15
 #
-# description: Lstatd is part of LinuxStat, system for collecting and displaing
+# description:	Lstatd is part of LinuxStat, system for collecting and displaing
 #		statistic data.
 
 # Source function library.
@@ -19,22 +19,22 @@ flags=''
 case "$1" in
   start)
 	if [ ! -f /var/lock/subsys/lstatd ]; then
-            msg_starting lstatd
-            daemon $lstatd $flags
-            RETVAL=$?
-            [ $RETVAL -eq 0 ] && touch /var/lock/subsys/lstatd && pidof -x lstatd > $pidfile
-        else
-	    msg_Already_Running lstatd
+		msg_starting lstatd
+		daemon $lstatd $flags
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/lstatd && pidof -x lstatd > $pidfile
+	else
+		msg_Already_Running lstatd
 	fi
 	;;
   stop)
 	if [ -f /var/lock/subsys/lstatd ]; then
-	    msg_stopping lstatd
-	    killproc lstatd
-	    rm -f $pidfile /var/lock/subsys/lstatd >/dev/null 2>&1
+		msg_stopping lstatd
+		killproc lstatd
+		rm -f $pidfile /var/lock/subsys/lstatd >/dev/null 2>&1
 	else
-	    msg_Not_Running lstatd
-	    exit 1
+		msg_Not_Running lstatd
+		exit 1
 	fi
 	;;
   restart)
@@ -45,7 +45,7 @@ case "$1" in
 	status lstatd
 	;;
   debug)
-        #set debug flag
+	#set debug flag
 	flags='-d 1'
 	start
 	;;
