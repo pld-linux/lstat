@@ -57,7 +57,7 @@ system Linux. Przy okazji zosta³y dodane wykresy obrazuj±ce inne
 parametry systemu.
 
 %prep
-%setup  -q
+%setup -q
 %patch0 -p1
 %patch1 -p1
 
@@ -91,26 +91,26 @@ rm -rf $RPM_BUILD_ROOT
 %post
 /sbin/chkconfig --add lstatd
 if [ -f /var/lock/subsys/lstatd ]; then
-        /etc/rc.d/init.d/lstatd restart >&2
+	/etc/rc.d/init.d/lstatd restart >&2
 else
 	echo "Run \"/etc/rc.d/init.d/lstatd start\" to start counting statistics."
 fi
 
 if [ -f %{_sysconfdir}/httpd/httpd.conf ] && \
-        ! grep -q "^Include.*/%{name}.conf" %{_sysconfdir}/httpd/httpd.conf; then
-                echo "Include %{_sysconfdir}/httpd/%{name}.conf" >> %{_sysconfdir}/httpd/httpd.conf
+     ! grep -q "^Include.*/%{name}.conf" %{_sysconfdir}/httpd/httpd.conf; then
+	echo "Include %{_sysconfdir}/httpd/%{name}.conf" >> %{_sysconfdir}/httpd/httpd.conf
 	if [ -f /var/lock/subsys/httpd ]; then
-        	/etc/rc.d/init.d/httpd restart 1>&2
+		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
 fi
 /usr/bin/Mkgraph.pl
 
 %preun
 if [ "$1" = 0 ]; then
-        if [ -f /var/lock/subsys/lstatd ]; then
-                /etc/rc.d/init.d/lstatd stop >&2
-        fi
-        /sbin/chkconfig --del lstatd
+	if [ -f /var/lock/subsys/lstatd ]; then
+		/etc/rc.d/init.d/lstatd stop >&2
+	fi
+	/sbin/chkconfig --del lstatd
 	umask 027
 	grep -E -v "^Include.*%{name}.conf" %{_sysconfdir}/httpd/httpd.conf > \
 	%{_sysconfdir}/httpd/httpd.conf.tmp
