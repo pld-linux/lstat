@@ -1,92 +1,45 @@
-diff -urN lstat-2.0/Makefile.in lstat-2.0.chg/Makefile.in
---- lstat-2.0/Makefile.in	Mon Nov  5 16:44:51 2001
-+++ lstat-2.0.chg/Makefile.in	Mon Dec 17 17:19:37 2001
-@@ -33,64 +33,36 @@
- 	mkdir -p ${BUILDDIR}/lib
- 	${PERL} ./fillvar ${CONFIG} ${SRCDIR} ${BUILDDIR} ${FILES}
+diff -urN lstat-2.2.orig/Makefile.in lstat-2.2/Makefile.in
+--- lstat-2.2.orig/Makefile.in	Tue May 21 12:17:34 2002
++++ lstat-2.2/Makefile.in	Tue May 21 12:59:12 2002
+@@ -44,7 +44,7 @@
  
--install: install_files mkgraph initrc update_apache_conf
-+install: install_files 
+ all: clean_CVS $(PROGS) $(LIBS) $(MISC) templates/Makefile
+ 
+-install: install_files initrc update_apache_conf mkgraphs
++install: install_files initrc update_apache_conf
  
  install_files:
- 	@echo "Instaling  files..."
--	${INSTALL} -d ${LIBDIR}
--	${INSTALL} -p -m 644 ${BUILDDIR}/lib/Lstatobj.pm ${LIBDIR}
--	${INSTALL} -p -m 644 ${BUILDDIR}/lib/Misc.pm ${LIBDIR}
--	${INSTALL} -d ${TEMPLATESDIR}
--	${INSTALL} -d ${RRDDIR}
--	${INSTALL} -m 644 ${BUILDDIR}/lib/config ${ETCDIR}
--	${INSTALL} -p -m 644 ${SRCDIR}/templates/* ${TEMPLATESDIR}
--	${INSTALL} -p -m 700 -g $(WWWGROUP) -o $(WWWUSER) -d ${OBJECTSDIR}
--	${INSTALL} -p -m 700 -g $(WWWGROUP) -o $(WWWUSER) -d ${PAGESDIR}
--	${INSTALL} -d ${WWWDIR}images/btn
--	${INSTALL} -p -m 644 ${SRCDIR}/images/* ${WWWDIR}/images
--	${INSTALL} -p -m 644 ${SRCDIR}/btn/* ${WWWDIR}/images/btn
--	${INSTALL} -d ${WWWDIR}doc
--	${INSTALL} -p -m 644 ${SRCDIR}/doc/* ${WWWDIR}/doc
--	${INSTALL} -p -m 700 -g $(WWWGROUP) -o $(WWWUSER) -d ${WWWDIR}statimg
--	${INSTALL} -d ${WWWDIR}edit
--	${INSTALL} -p -m 755 ${BUILDDIR}/lstat.cgi ${WWWDIR}
--	${INSTALL} -p -m 755 ${BUILDDIR}/edit.cgi ${WWWDIR}edit
--	${INSTALL} -d ${BINDIR}
--	${INSTALL} -p -m 755 ${BUILDDIR}/lstatd ${BINDIR}
--	${INSTALL} -p -m 755 ${BUILDDIR}/security_lstat ${BINDIR}
-+	${INSTALL} -d $(DESTDIR)${LIBDIR}
-+	${INSTALL} -p -m 644 ${BUILDDIR}/lib/Lstatobj.pm $(DESTDIR)${LIBDIR}
-+	${INSTALL} -p -m 644 ${BUILDDIR}/lib/Misc.pm $(DESTDIR)${LIBDIR}
-+	${INSTALL} -d $(DESTDIR)${TEMPLATESDIR}
-+	${INSTALL} -d $(DESTDIR)${RRDDIR}
-+	${INSTALL} -d $(DESTDIR)${ETCDIR}
-+	${INSTALL} -m 644 ${BUILDDIR}/lib/config $(DESTDIR)${ETCDIR}
-+	${INSTALL} -p -m 644 ${SRCDIR}/templates/* $(DESTDIR)${TEMPLATESDIR}
-+	${INSTALL} -p -m 700 -d $(DESTDIR)${OBJECTSDIR}
-+	${INSTALL} -p -m 700 -d $(DESTDIR)${PAGESDIR}
-+	${INSTALL} -d $(DESTDIR)${WWWDIR}images/btn
-+	${INSTALL} -p -m 644 ${SRCDIR}/images/* $(DESTDIR)${WWWDIR}/images
-+	${INSTALL} -p -m 644 ${SRCDIR}/btn/* $(DESTDIR)${WWWDIR}/images/btn
-+	${INSTALL} -d $(DESTDIR)${WWWDIR}doc
-+	${INSTALL} -p -m 644 ${SRCDIR}/doc/* $(DESTDIR)${WWWDIR}/doc
-+	${INSTALL} -p -m 700 -d $(DESTDIR)${WWWDIR}statimg
-+	${INSTALL} -d $(DESTDIR)${WWWDIR}edit
-+	${INSTALL} -p -m 755 ${BUILDDIR}/lstat.cgi $(DESTDIR)${WWWDIR}
-+	${INSTALL} -p -m 755 ${BUILDDIR}/edit.cgi $(DESTDIR)${WWWDIR}edit
-+	${INSTALL} -d $(DESTDIR)${BINDIR}
-+	${INSTALL} -p -m 755 ${BUILDDIR}/lstatd $(DESTDIR)${BINDIR}
-+	${INSTALL} -p -m 755 ${BUILDDIR}/security_lstat $(DESTDIR)${BINDIR}
-+	${INSTALL} -p -m 755 ./mkgraph ${DESTDIR}${BINDIR}
+ 	@echo "Instaling  library files..."
+@@ -65,9 +65,9 @@
+ 	echo ;\
+ 	fi;
  
+-	@${INSTALL} -p -m 700 -g $(WWWGROUP) -o $(WWWUSER) -d $(DESTDIR)${OBJECTSDIR}
++	@${INSTALL} -p -m 700 -d $(DESTDIR)${OBJECTSDIR}
+ 	@echo "Instaling  pages and user config files..."
+-	@${INSTALL} -p -m 700 -g $(WWWGROUP) -o $(WWWUSER) -d $(DESTDIR)${PAGESDIR}
++	@${INSTALL} -p -m 700 -d $(DESTDIR)${PAGESDIR}
  
--mkgraph: $(BUILDDIR)
--	@echo "Creating graph files..."
--	${PERL} ./mkgraph ${CONFIG} ${OBJECTSDIR} ${PAGESDIR}
--	if [ ! -f ${PAGESDIR}index.pg ]; then \
--	${INSTALL} -p -m 644 ${SRCDIR}/pages/index.pg ${PAGESDIR};\
--	${INSTALL} -p -m 644 ${SRCDIR}/pages/user.config ${PAGESDIR};\
--	fi;
--	chown -R $(WWWUSER):$(WWWGROUP) ${PAGESDIR}
--	chown -R $(WWWUSER):$(WWWGROUP) ${OBJECTSDIR}
- 	
--update_apache_conf:
--	@echo "Updating Apache conf..."
--	if [ $(UPDATE_APACHE_CONF) = 1 ]; then \
--	${PERL} ./httpddir $(HTTPDCONF) $(WWWDIR) $(PNGURL) ; \
--	fi;
--initrc:
--	@echo "Creating symlinks in init directory"
--	if [ -d $(INITRCDIR) ]; then \
--	${INSTALL} -p -m 755 ${BUILDDIR}/lstatd.rc ${INITRCDIR}lstatd ; \
--	cd /etc/rc.d; \
--	for i in 0 1 6 ; do ln -sf ../init.d/lstatd rc$$i.d/K15lstatd ; done; \
--	for i in 2 3 4 5 ; do ln -sf ../init.d/lstatd rc$$i.d/S85lstatd ; done \
--	fi;
--rminitrc:
--	@echo "Removing symlinks in init directory"
--	if [ -f ${INITRCDIR}lstatd ]; then \
--	rm -f ${INITRCDIR}lstatd ; \
--	cd /etc/rc.d; \
--	for i in 0 1 6 ; do rm -f rc$$i.d/K15lstatd ; done; \
--	for i in 2 3 4 5 ; do rm -f rc$$i.d/S85lstatd ; done \
--	fi;
- clean: $(BUILDDIR)
- 	@rm -fR $(BUILDDIR)
- clean_CVS:
+ 	@if [ ! -f $(DESTDIR)${PAGESDIR}index.pg ]; then \
+ 	${INSTALL} -m 644 ${SRCDIR}/pages/index.pg $(DESTDIR)${PAGESDIR} ;\
+@@ -97,7 +97,7 @@
+ 	@${INSTALL} -p -m 644 ${SRCDIR}/images/skins/sky/uni/* $(DESTDIR)${WWWDIR}/skins/sky/uni
+ 
+ 	@echo "Instaling CGI scripts"
+-	@${INSTALL} -p -m 700 -g $(WWWGROUP) -o $(WWWUSER) -d $(DESTDIR)${WWWDIR}statimg
++	@${INSTALL} -p -m 700 -d $(DESTDIR)${WWWDIR}statimg
+ 	@${INSTALL} -d $(DESTDIR)${WWWDIR}edit
+ 	@${INSTALL} -p -m 755 ${SRCDIR}/lstat.cgi $(DESTDIR)${WWWDIR}
+ 	@${INSTALL} -p -m 755 ${SRCDIR}/edit.cgi $(DESTDIR)${WWWDIR}edit
+@@ -144,11 +144,6 @@
+ 	echo "ok";\
+ 	fi;
+ 
+-mkgraphs:
+-	@echo "Creating some stats"
+-	@$(BINDIR)/Mkgraph.pl
+-	@echo
+-
+ clean:
+ 	cd $(SRCDIR) && rm -f $(PROGS)
+ 	cd $(SRCDIR)/lib && rm -f $(LIBS)
