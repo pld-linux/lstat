@@ -3,7 +3,7 @@ Summary:	LinuxStat
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
 Name:		lstat
 Version:	2.0BETA2
-Release:	2
+Release:	3
 License:	GPL
 Group:		Applications/Networking
 Group(de):	Applikationen/Netzwerkwesen
@@ -104,7 +104,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_initdir}/lstatd
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/lstat/config
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/lstat.conf
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/lstat.conf
 %attr(755,root,root) /home/httpd/html/lstat/edit/edit.cgi
 %attr(755,root,root) /home/httpd/html/lstat/lstat.cgi
 /home/httpd/html/lstat/doc/*
