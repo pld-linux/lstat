@@ -89,16 +89,7 @@ if [ -f %{_sysconfdir}/httpd/httpd.conf ] && \
 	fi
 fi
 
-@echo "Creating graph files..."
-${PERL} ./mkgraph ${CONFIG} $(DESTDIR)${OBJECTSDIR}
-$(DESTDIR)${PAGESDIR}
-if [ ! -f $(DESTDIR)${PAGESDIR}index.pg ]; then \
-${INSTALL} -p -m 644 ${SRCDIR}/pages/index.pg
-$(DESTDIR)${PAGESDIR};\
-${INSTALL} -p -m 644 ${SRCDIR}/pages/user.config
-$(DESTDIR)${PAGESDIR};\
-fi;
-
+/usr/bin/perl %{_bindir}/mkgraph ${_sysconfdir}/httpd/lstat.conf ${_pkglibdir}/objects/ ${_pkglibdir}/pages/
 %preun
 if [ "$1" = 0 ]; then
         if [ -f /var/lock/subsys/lstatd ]; then
