@@ -36,8 +36,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_pkglibdir		/var/lib/%{name}
 %define		_wwwuser		http
 %define		_wwwgroup		http
-%define		_wwwrootdir		/home/services/httpd
-%define		_httpdconf		/etc/httpd/httpd.conf/httpd.conf
+%define		_wwwrootdir		/home/httpd
+%define		_httpdconf		/etc/httpd/httpd.conf
 
 %description
 LinuxStat is for generating and displaying different statistics of
@@ -67,11 +67,10 @@ parametry systemu.
 %build
 %{__perl} ./configure \
 	--apache \
-	--mod_perl2 \
 	--with-httpdconf=%{_httpdconf} \
 	--with-prefix=%{_prefix} \
 	--with-bin=%{_bindir} \
-	--with-lib=%{perl_vendorlib} \
+	--with-lib=%{_libdir}/perl5/5.6.1 \
 	--with-etc=%{_sysconfdir}/lstat \
 	--with-www=%{_wwwrootdir}/lstat \
 	--with-rrd=%{_pkglibdir}/rrd \
@@ -103,20 +102,25 @@ if [ -f /var/lock/subsys/lstatd ]; then
 else
 	echo "Run \"/etc/rc.d/init.d/lstatd start\" to start counting statistics."
 fi
-
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
+if [ -f %{_sysconfdir}/httpd/httpd.conf ] && \
+	! grep -q "^Include.*/%{name}.conf" %{_sysconfdir}/httpd/httpd.conf; then
+		echo "Include %{_sysconfdir}/httpd/%{name}.conf" >> %{_sysconfdir}/httpd/httpd.conf
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd restart 1>&2
+	fi
 fi
 /usr/bin/Mkgraph.pl
 
 %preun
-if [ "$1" = 0 ]
-then
+if [ "$1" = 0 ]; then
+	umask 027
 	if [ -f /var/lock/subsys/lstatd ]; then
 		/etc/rc.d/init.d/lstatd stop >&2
 	fi
-
-/sbin/chkconfig --del lstatd
+	/sbin/chkconfig --del lstatd
+	grep -E -v "^Include.*%{name}.conf" %{_sysconfdir}/httpd/httpd.conf > \
+		%{_sysconfdir}/httpd/httpd.conf.tmp
+	mv -f %{_sysconfdir}/httpd/httpd.conf.tmp %{_sysconfdir}/httpd/httpd.conf
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
@@ -128,7 +132,7 @@ fi
 %attr(754,root,root) %{_initdir}/lstatd
 %dir %{_sysconfdir}/lstat
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/lstat/config
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/lstat.conf
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/lstat.conf
 %dir %{_wwwrootdir}/lstat
 %dir %{_wwwrootdir}/lstat/doc
 %dir %{_wwwrootdir}/lstat/icons
@@ -145,7 +149,7 @@ fi
 %attr(755,root,root) %{_bindir}/show_filters
 %attr(755,root,root) %{_bindir}/security_lstat
 %attr(755,root,root) %{_bindir}/Mkgraph.pl
-%{perl_vendorlib}/*
+%{_libdir}/perl5/5.6.1/*
 %dir %{_pkglibdir}/rrd
 %attr(700,http,http) %dir %{_pkglibdir}/objects
 %attr(700,http,http) %dir %{_pkglibdir}/pages
