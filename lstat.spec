@@ -120,7 +120,11 @@ fi
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/lstat/config
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/lstat.conf
 %dir %{_wwwrootdir}/lstat
+%dir %{_wwwrootdir}/lstat/doc
+%dir %{_wwwrootdir}/lstat/icons
+%dir %{_wwwrootdir}/lstat/skins
 %dir %{_wwwrootdir}/lstat/edit
+%dir %{_pkglibdir}
 %attr(700,http,http) %dir %{_wwwrootdir}/lstat/statimg
 %attr(755,root,root) %{_wwwrootdir}/lstat/edit/edit.cgi
 %attr(755,root,root) %{_wwwrootdir}/lstat/lstat.cgi
