@@ -3,7 +3,7 @@ Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
 Name:		lstat
 Version:	2.2
-Release:	1
+Release:	2
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
@@ -11,6 +11,7 @@ Source0:	http://prdownloads.sourceforge.net/lstat/%{name}-%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	%{name}.conf
 Patch0:		%{name}-makefile.patch
+Patch1:		%{name}-PLD.patch
 URL:		http://lstat.sourceforge.net/
 BuildRequires:	perl
 BuildRequires:	perl-CGI
@@ -23,6 +24,7 @@ Requires(post,preun):	grep
 Requires(preun):	apache
 Requires(preun):	fileutils
 Requires:	apache-mod_expires
+Requires:	apache-mod_auth
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -56,6 +58,7 @@ parametry systemu.
 %prep
 %setup  -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 ./configure \
