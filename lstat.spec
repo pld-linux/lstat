@@ -1,9 +1,9 @@
 %include	/usr/lib/rpm/macros.perl
-Summary:	LinuxStat
+Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
 Name:		lstat
 Version:	2.0BETA2
-Release:	3
+Release:	4
 License:	GPL
 Group:		Applications/Networking
 Group(de):	Applikationen/Netzwerkwesen
@@ -25,7 +25,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_pkglibdir		/var/lib/%{name}
 
 %description
-LinuxStat
+LinuxStat is for generating and displaying different statistics of
+Linux by WWW browser.
 
 %description -l pl
 Projekt LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
@@ -67,7 +68,7 @@ parametry systemu.
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
-install -D %{SOURCE1} $RPM_BUILD_ROOT/%{_initdir}/lstatd
+install -D %{SOURCE1} $RPM_BUILD_ROOT%{_initdir}/lstatd
 install -D %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/%{name}.conf
 
 %clean
@@ -103,12 +104,15 @@ fi
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_initdir}/lstatd
+%dir %{_sysconfdir}/lstat
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/lstat/config
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/lstat.conf
+%dir /home/httpd/html/lstat
+%dir /home/httpd/html/lstat/edit
 %attr(755,root,root) /home/httpd/html/lstat/edit/edit.cgi
 %attr(755,root,root) /home/httpd/html/lstat/lstat.cgi
-/home/httpd/html/lstat/doc/*
-/home/httpd/html/lstat/images/*
+/home/httpd/html/lstat/doc
+/home/httpd/html/lstat/images
 %attr(700,http,http) %dir /home/httpd/html/lstat/statimg
 %attr(755,root,root) %{_bindir}/lstatd
 %attr(755,root,root) %{_bindir}/security_lstat
@@ -118,4 +122,5 @@ fi
 %attr(644,http,http) %{_pkglibdir}/objects/*
 %attr(700,http,http) %dir %{_pkglibdir}/pages
 %attr(644,http,http) %verify(not size mtime md5) %{_pkglibdir}/pages/*
+%dir %{_pkglibdir}/templates
 %{_pkglibdir}/templates/*
