@@ -12,23 +12,25 @@ Source1:	%{name}.init
 Source2:	%{name}.conf
 Patch0:		%{name}-makefile.patch
 URL:		http://lstat.sourceforge.net/
-Prereq:		grep
-Prereq:		apache
-Prereq:		chkconfig
-Prereq:		perl
-Requires:	apache-mod_expires
-BuildRequires:	rpm-perlprov
 BuildRequires:	perl
-BuildRequires:	rrdtool
 BuildRequires:	perl-CGI
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+BuildRequires:	rpm-perlprov
+BuildRequires:	rrdtool
+PreReq:		apache
+PreReq:		perl
+Requires(post,preun):	/sbin/chkconfig
+Requires(post,preun):	grep
+Requires(preun):	apache
+Requires(preun):	fileutils
+Requires:	apache-mod_expires
 BuildArch:	noarch
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_initdir		/etc/rc.d/init.d
 %define		_pkglibdir		/var/lib/%{name}
 %define		_wwwuser		http
 %define		_wwwgroup		http
-%define		_wwwrootdir		/home/httpd
+%define		_wwwrootdir		/home/services/httpd
 %define		_httpdconf		/etc/httpd/httpd.conf
 
 %description
@@ -105,11 +107,12 @@ if [ "$1" = 0 ]; then
                 /etc/rc.d/init.d/lstatd stop >&2
         fi
         /sbin/chkconfig --del lstatd
+	umask 027
 	grep -E -v "^Include.*%{name}.conf" %{_sysconfdir}/httpd/httpd.conf > \
 	%{_sysconfdir}/httpd/httpd.conf.tmp
 	mv -f %{_sysconfdir}/httpd/httpd.conf.tmp %{_sysconfdir}/httpd/httpd.conf
 	if [ -f /var/lock/subsys/httpd ]; then
-	        /etc/rc.d/init.d/httpd restart 1>&2
+		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
 fi
 
@@ -120,14 +123,14 @@ fi
 %dir %{_sysconfdir}/lstat
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/lstat/config
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/lstat.conf
-%dir /home/httpd/lstat
-%dir /home/httpd/lstat/edit
-%attr(700,http,http) %dir /home/httpd/lstat/statimg
-%attr(755,root,root) /home/httpd/lstat/edit/edit.cgi
-%attr(755,root,root) /home/httpd/lstat/lstat.cgi
-/home/httpd/lstat/doc/*
-/home/httpd/lstat/skins/*
-/home/httpd/lstat/icons/*
+%dir %{_wwwrootdir}/lstat
+%dir %{_wwwrootdir}/lstat/edit
+%attr(700,http,http) %dir %{_wwwrootdir}/lstat/statimg
+%attr(755,root,root) %{_wwwrootdir}/lstat/edit/edit.cgi
+%attr(755,root,root) %{_wwwrootdir}/lstat/lstat.cgi
+%{_wwwrootdir}/lstat/doc/*
+%{_wwwrootdir}/lstat/skins/*
+%{_wwwrootdir}/lstat/icons/*
 %attr(755,root,root) %{_bindir}/lstatd
 %attr(755,root,root) %{_bindir}/show_filters
 %attr(755,root,root) %{_bindir}/security_lstat
