@@ -3,7 +3,7 @@ Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
 Name:		lstat
 Version:	2.2
-Release:	2
+Release:	3
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
@@ -61,12 +61,12 @@ parametry systemu.
 %patch1 -p1
 
 %build
-./configure \
+%{__perl} ./configure \
 	--apache \
 	--with-httpdconf=%{_httpdconf} \
 	--with-prefix=%{_prefix} \
 	--with-bin=%{_bindir} \
-	--with-lib=%{_libdir}/perl5/5.6.1 \
+	--with-lib=%{perl_vendorlib} \
 	--with-etc=%{_sysconfdir}/lstat \
 	--with-www=%{_wwwrootdir}/lstat \
 	--with-rrd=%{_pkglibdir}/rrd \
@@ -138,7 +138,7 @@ fi
 %attr(755,root,root) %{_bindir}/show_filters
 %attr(755,root,root) %{_bindir}/security_lstat
 %attr(755,root,root) %{_bindir}/Mkgraph.pl
-%{_libdir}/perl5/5.6.1/*
+%{perl_vendorlib}/*
 %dir %{_pkglibdir}/rrd
 %attr(700,http,http) %dir %{_pkglibdir}/objects
 %attr(700,http,http) %dir %{_pkglibdir}/pages
