@@ -1,3 +1,7 @@
+# TODO:
+# - move to /usr/share
+# - allow to show while configure where are: "w","users","sh","ipchains","df","fping","ifconfig","install","perl","chmod","iptables","uptime","htpasswd"
+#   Or guess it...
 %include	/usr/lib/rpm/macros.perl
 Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
@@ -14,6 +18,7 @@ Source2:	%{name}.conf
 Patch0:		%{name}-makefile.patch
 Patch1:		%{name}-PLD.patch
 URL:		http://lstat.sourceforge.net/
+BuildRequires:	apache-mod_auth
 BuildRequires:	perl-base
 BuildRequires:	perl-CGI
 BuildRequires:	rpm-perlprov
@@ -62,6 +67,7 @@ parametry systemu.
 %build
 %{__perl} ./configure \
 	--apache \
+	--mod_perl2 \
 	--with-httpdconf=%{_httpdconf} \
 	--with-prefix=%{_prefix} \
 	--with-bin=%{_bindir} \
@@ -75,13 +81,17 @@ parametry systemu.
 	--with-wwwuser=%{_wwwuser} \
 	--with-wwwgroup=%{_wwwgroup} \
 	--noupdate_apache_conf
+
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT%{_initdir}
 
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
-install -D %{SOURCE1} $RPM_BUILD_ROOT%{_initdir}/lstatd
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
+
+install %{SOURCE1} $RPM_BUILD_ROOT%{_initdir}/lstatd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
