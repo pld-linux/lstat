@@ -4,6 +4,7 @@ Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
 Name:		lstat
 Version:	2.0
 Release:	1
+Epoch:		1
 License:	GPL
 Group:		Applications/Networking
 Group(de):	Applikationen/Netzwerkwesen
@@ -16,6 +17,7 @@ URL:		http://lstat.sourceforge.net/
 Prereq:		grep
 Prereq:		apache
 Prereq:		chkconfig
+Prereq:		perl
 Requires:	apache-mod_expires
 BuildRequires:	rpm-perlprov
 BuildRequires:	perl
@@ -70,6 +72,7 @@ parametry systemu.
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
+install -D mkgraph $RPM_BUILD_ROOT%{_bindir}/mkgraph
 install -D %{SOURCE1} $RPM_BUILD_ROOT%{_initdir}/lstatd
 install -D %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/%{name}.conf
 
@@ -89,7 +92,8 @@ if [ -f %{_sysconfdir}/httpd/httpd.conf ] && \
 	fi
 fi
 
-/usr/bin/perl %{_bindir}/mkgraph ${_sysconfdir}/httpd/lstat.conf ${_pkglibdir}/objects/ ${_pkglibdir}/pages/
+/usr/bin/perl %{_bindir}/mkgraph %{_sysconfdir}/httpd/lstat.conf %{_pkglibdir}/objects/ %{_pkglibdir}/pages/
+
 %preun
 if [ "$1" = 0 ]; then
         if [ -f /var/lock/subsys/lstatd ]; then
@@ -112,6 +116,7 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/lstat.conf
 %dir /home/httpd/html/lstat
 %dir /home/httpd/html/lstat/edit
+%attr(755,root,root) %{_bindir}/mkgraph
 %attr(700,http,http) %dir /home/httpd/html/lstat/statimg
 %attr(755,root,root) /home/httpd/html/lstat/edit/edit.cgi
 %attr(755,root,root) /home/httpd/html/lstat/lstat.cgi
