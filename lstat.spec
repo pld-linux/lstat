@@ -7,7 +7,8 @@ Release:	3
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
-Source0:	http://dl.sourceforge.net/lstat/%{name}-%{version}.tar.gz
+# Source0-md5:	5333f10d091335a06a2e4f2dfcf67038
+Source0:	http://prdownloads.sourceforge.net/lstat/%{name}-%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	%{name}.conf
 Patch0:		%{name}-makefile.patch
