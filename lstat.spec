@@ -115,7 +115,8 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_initdir}/lstatd
+%doc src/doc/*
+%attr(754,root,root) %{_initdir}/lstatd
 %dir %{_sysconfdir}/lstat
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/lstat/config
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/lstat.conf
@@ -138,4 +139,3 @@ fi
 %attr(700,http,http) %{_pkglibdir}/pages/*
 %dir %{_pkglibdir}/templates
 %{_pkglibdir}/templates/*
-%doc src/doc/*
