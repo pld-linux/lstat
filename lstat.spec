@@ -3,7 +3,7 @@ Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
 Name:		lstat
 Version:	2.2
-Release:	4
+Release:	5
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
@@ -32,7 +32,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_wwwuser		http
 %define		_wwwgroup		http
 %define		_wwwrootdir		/home/services/httpd
-%define		_httpdconf		/etc/httpd/httpd.conf
+%define		_httpdconf		/etc/httpd/httpd.conf/httpd.conf
 
 %description
 LinuxStat is for generating and displaying different statistics of
@@ -94,25 +94,19 @@ else
 	echo "Run \"/etc/rc.d/init.d/lstatd start\" to start counting statistics."
 fi
 
-if [ -f %{_sysconfdir}/httpd/httpd.conf ] && \
-     ! grep -q "^Include.*/%{name}.conf" %{_sysconfdir}/httpd/httpd.conf; then
-	echo "Include %{_sysconfdir}/httpd/%{name}.conf" >> %{_sysconfdir}/httpd/httpd.conf
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 /usr/bin/Mkgraph.pl
 
 %preun
-if [ "$1" = 0 ]; then
+if [ "$1" = 0 ]
+then
 	if [ -f /var/lock/subsys/lstatd ]; then
 		/etc/rc.d/init.d/lstatd stop >&2
 	fi
-	/sbin/chkconfig --del lstatd
-	umask 027
-	grep -E -v "^Include.*%{name}.conf" %{_sysconfdir}/httpd/httpd.conf > \
-	%{_sysconfdir}/httpd/httpd.conf.tmp
-	mv -f %{_sysconfdir}/httpd/httpd.conf.tmp %{_sysconfdir}/httpd/httpd.conf
+
+/sbin/chkconfig --del lstatd
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
@@ -124,7 +118,7 @@ fi
 %attr(754,root,root) %{_initdir}/lstatd
 %dir %{_sysconfdir}/lstat
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/lstat/config
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/lstat.conf
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/lstat.conf
 %dir %{_wwwrootdir}/lstat
 %dir %{_wwwrootdir}/lstat/edit
 %attr(700,http,http) %dir %{_wwwrootdir}/lstat/statimg
