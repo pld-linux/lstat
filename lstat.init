@@ -24,7 +24,7 @@ case "$1" in
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/lstatd && pidof -x lstatd > $pidfile
 	else
-		msg_Already_Running lstatd
+		msg_already_running lstatd
 	fi
 	;;
   stop)
@@ -33,7 +33,7 @@ case "$1" in
 		killproc lstatd
 		rm -f $pidfile /var/lock/subsys/lstatd >/dev/null 2>&1
 	else
-		msg_Not_Running lstatd
+		msg_not_running lstatd
 		exit 1
 	fi
 	;;
@@ -54,7 +54,7 @@ case "$1" in
 	start
 	;;
   *)
-	msg_Usage "$0 {start|stop|restart|status|debug|moredebug}"
+	msg_usage "$0 {start|stop|restart|status|debug|moredebug}"
 	exit 1
 esac
 
