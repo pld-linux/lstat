@@ -20,6 +20,7 @@ Requires:	apache-mod_expires
 BuildRequires:	rpm-perlprov
 BuildRequires:	perl
 BuildRequires:	rrdtool
+BuildRequires:	perl-CGI
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_initdir		/etc/rc.d/init.d
