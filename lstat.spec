@@ -18,14 +18,12 @@ BuildRequires:	perl
 BuildRequires:	perl-CGI
 BuildRequires:	rpm-perlprov
 BuildRequires:	rrdtool
-PreReq:		apache
+PreReq:		webserver
 PreReq:		perl
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun):	grep
 Requires(preun):	apache
 Requires(preun):	fileutils
-Requires:	apache-mod_expires
-Requires:	apache-mod_auth
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
