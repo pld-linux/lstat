@@ -1,5 +1,4 @@
 # TODO:
-# - move to /usr/share
 # - allow to show while configure where are: "w","users","sh","ipchains","df","fping","ifconfig","install","perl","chmod","iptables","uptime","htpasswd"
 #   Or guess it...
 %include	/usr/lib/rpm/macros.perl
