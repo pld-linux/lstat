@@ -18,6 +18,7 @@ Patch0:		%{name}-makefile.patch
 Patch1:		%{name}-PLD.patch
 Patch2:		%{name}-perlhandler.patch
 URL:		http://lstat.sourceforge.net/
+BuildRequires:	apache-mod_auth
 BuildRequires:	perl-base
 BuildRequires:	perl-CGI
 BuildRequires:	rpm-perlprov
