@@ -7,7 +7,7 @@ Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
 Name:		lstat
 Version:	2.3.2
-Release:	6
+Release:	7
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
@@ -23,6 +23,7 @@ BuildRequires:	perl-base
 BuildRequires:	perl-CGI
 BuildRequires:	rpm-perlprov
 BuildRequires:	rrdtool
+BuildRequires:	sed >= 4.0
 PreReq:		webserver
 PreReq:		perl-base
 Requires(post,preun):	/sbin/chkconfig
@@ -96,6 +97,8 @@ install -d $RPM_BUILD_ROOT%{_initdir}
 	DESTDIR=$RPM_BUILD_ROOT
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_initdir}/lstatd
+
+sed -i -e "s#lstat/#lstat#g" $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/lstat.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
