@@ -6,7 +6,7 @@ Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
 Name:		lstat
 Version:	2.3.2
-Release:	8
+Release:	9
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
@@ -128,7 +128,7 @@ then
 	fi
 fi
 
-%triggerpostun -- %{name} <= 2.3.3-5
+%triggerpostun -- %{name} <= 1:2.3.3-5
 if [ -s /etc/httpd/httpd.conf/lstat.conf ]; then
 	sed -i -e "s#/home/services/httpd/lstat/#/usr/share/lstat/#g" /etc/httpd/httpd.conf/lstat.conf
 fi
