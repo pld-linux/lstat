@@ -14,12 +14,10 @@ Group:		Applications/Networking
 Source0:	http://dl.sourceforge.net/lstat/%{name}-%{version}.tar.gz
 # Source0-md5:	3298fa1dcdde38017b5a89f736f439f3
 Source1:	%{name}.init
-Source2:	%{name}.conf
 Patch0:		%{name}-makefile.patch
 Patch1:		%{name}-PLD.patch
 Patch2:		%{name}-perlhandler.patch
 URL:		http://lstat.sourceforge.net/
-BuildRequires:	apache-mod_auth
 BuildRequires:	perl-base
 BuildRequires:	perl-CGI
 BuildRequires:	rpm-perlprov
@@ -30,6 +28,7 @@ Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun):	grep
 Requires(preun):	apache
 Requires(preun):	fileutils
+Requires:	apache-mod_auth
 Requires:	apache-mod_perl
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
