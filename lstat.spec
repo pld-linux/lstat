@@ -61,13 +61,15 @@ parametry systemu.
 	--with-httpdconf=%{_httpdconf} \
 	--with-prefix=%{_prefix} \
 	--with-bin=%{_bindir} \
-	--with-lib=%{perl_sitelib} \
+	--with-lib=%{_libdir}/perl5/5.6.1 \
 	--with-etc=%{_sysconfdir}/lstat \
 	--with-www=%{_wwwrootdir}/lstat \
 	--with-rrd=%{_pkglibdir}/rrd \
 	--with-pages=%{_pkglibdir}/pages \
 	--with-objects=%{_pkglibdir}/objects \
 	--with-templates=%{_pkglibdir}/templates \
+	--with-wwwuser=%{_wwwuser} \
+	--with-wwwgroup=%{_wwwgroup} \
 	--noupdate_apache_conf
 %{__make}
 
@@ -85,7 +87,6 @@ rm -rf $RPM_BUILD_ROOT
 if [ -f /var/lock/subsys/lstatd ]; then
         /etc/rc.d/init.d/lstatd restart >&2
 else
-	echo "Run \"/usr/bin/Mkgraph.pl\" to init statistics."
 	echo "Run \"/etc/rc.d/init.d/lstatd start\" to start counting statistics."
 fi
 
@@ -96,6 +97,7 @@ if [ -f %{_sysconfdir}/httpd/httpd.conf ] && \
         	/etc/rc.d/init.d/httpd restart 1>&2
 	fi
 fi
+/usr/bin/Mkgraph.pl
 
 %preun
 if [ "$1" = 0 ]; then
@@ -129,10 +131,11 @@ fi
 %attr(755,root,root) %{_bindir}/show_filters
 %attr(755,root,root) %{_bindir}/security_lstat
 %attr(755,root,root) %{_bindir}/Mkgraph.pl
-%{perl_sitelib}/*
+%{_libdir}/perl5/5.6.1/*
 %dir %{_pkglibdir}/rrd
 %attr(700,http,http) %dir %{_pkglibdir}/objects
 %attr(700,http,http) %dir %{_pkglibdir}/pages
 %attr(700,http,http) %{_pkglibdir}/pages/*
 %dir %{_pkglibdir}/templates
 %{_pkglibdir}/templates/*
+%doc src/doc/*
