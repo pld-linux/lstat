@@ -1,32 +1,7 @@
-diff -Nur lstat-2.2.orig/src/lstatd.in lstat-2.2/src/lstatd.in
---- lstat-2.2.orig/src/lstatd.in	Wed Apr 10 13:56:59 2002
-+++ lstat-2.2/src/lstatd.in	Tue Feb 11 13:49:14 2003
-@@ -22,8 +22,8 @@
- if ($Debugging < 3) {
- #start daemon
- chdir '/' or die "Can't chdir to /: $!";
--#umask 0077;
--umask 0;
-+umask 0077;
-+#umask 0;
- open STDIN, '/dev/null'   or die "Can't read /dev/null: $!";
- open (STDOUT, ">$logfile") or die "Can't write to $logfile: $!";
- open (STDERR, '>&STDOUT') or die "Can't redirect STDERR to STDOUT: $!";
-diff -Nur lstat-2.2.orig/src/misc/lstat.conf.in lstat-2.2/src/misc/lstat.conf.in
---- lstat-2.2.orig/src/misc/lstat.conf.in	Sat Jan 26 16:54:59 2002
-+++ lstat-2.2/src/misc/lstat.conf.in	Tue Feb 11 13:50:05 2003
-@@ -6,6 +6,7 @@
- AddHandler cgi-script .cgi
- 
- AllowOverride AuthConfig Limit
-+DirectoryIndex lstat.cgi
- 
- #setting expiration pngfiles
- #make sure if Expires mod is enabled
-
---- lstat-2.2/src/lib/config.in~	Fri Jan 25 19:06:29 2002
-+++ lstat-2.2/src/lib/config.in	Mon May 26 02:29:35 2003
-@@ -22,12 +22,12 @@
+diff -ur lstat-2.3.old/src/lib/config.in lstat-2.3/src/lib/config.in
+--- lstat-2.3.old/src/lib/config.in	2004-07-26 12:42:54.000000000 +0200
++++ lstat-2.3/src/lib/config.in	2004-09-26 18:08:37.385203680 +0200
+@@ -23,12 +23,12 @@
  PROC_INT_FILE=/proc/net/dev
  PROC_PART_FILE=/proc/partitions
  DF=@@df@@
@@ -41,6 +16,27 @@ diff -Nur lstat-2.2.orig/src/misc/lstat.conf.in lstat-2.2/src/misc/lstat.conf.in
 +REDHAT=/etc/pld-release
  PROC_VERSION=/proc/version
  FPING=@@fping@@
-- 
-\ No newline at end of file
-+
+ LOG_PATH=/var/log:/var/log/snort
+diff -ur lstat-2.3.old/src/lstatd.in lstat-2.3/src/lstatd.in
+--- lstat-2.3.old/src/lstatd.in	2003-11-11 22:16:26.000000000 +0100
++++ lstat-2.3/src/lstatd.in	2004-09-26 17:31:08.000000000 +0200
+@@ -23,8 +23,8 @@
+ if ($Debugging < 3) {
+ #start daemon
+ chdir '/' or die "Can't chdir to /: $!";
+-#umask 0077;
+-umask 0;
++umask 0077;
++#umask 0;
+ open STDIN, '/dev/null'   or die "Can't read /dev/null: $!";
+ open (STDOUT, ">$logfile") or die "Can't write to $logfile: $!";
+ open (STDERR, '>&STDOUT') or die "Can't redirect STDERR to STDOUT: $!";
+diff -ur lstat-2.3.old/src/misc/lstat.conf.in lstat-2.3/src/misc/lstat.conf.in
+--- lstat-2.3.old/src/misc/lstat.conf.in	2002-11-22 13:09:43.000000000 +0100
++++ lstat-2.3/src/misc/lstat.conf.in	2004-09-26 17:31:08.000000000 +0200
+@@ -5,4 +5,5 @@
+ Options ExecCGI
+ AddHandler cgi-script .cgi
+ AllowOverride AuthConfig Limit
++DirectoryIndex lstat.cgi
+ </Directory>
