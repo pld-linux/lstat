@@ -81,9 +81,9 @@ fi
 if [ -f %{_sysconfdir}/httpd/httpd.conf ] && \
         ! grep -q "^Include.*/%{name}.conf" %{_sysconfdir}/httpd/httpd.conf; then
                 echo "Include %{_sysconfdir}/httpd/%{name}.conf" >> %{_sysconfdir}/httpd/httpd.conf
-fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
+	if [ -f /var/lock/subsys/httpd ]; then
+        	/etc/rc.d/init.d/httpd restart 1>&2
+	fi
 fi
 
 %preun
