@@ -2,8 +2,8 @@
 Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
 Name:		lstat
-Version:	2.0BETA2
-Release:	4
+Version:	2.0
+Release:	1
 License:	GPL
 Group:		Applications/Networking
 Group(de):	Applikationen/Netzwerkwesen
@@ -19,6 +19,7 @@ Prereq:		chkconfig
 Requires:	apache-mod_expires
 BuildRequires:	rpm-perlprov
 BuildRequires:	perl
+BuildRequires:	rrdtool
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_initdir		/etc/rc.d/init.d
@@ -109,11 +110,11 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/lstat.conf
 %dir /home/httpd/html/lstat
 %dir /home/httpd/html/lstat/edit
+%attr(700,http,http) %dir /home/httpd/html/lstat/statimg
 %attr(755,root,root) /home/httpd/html/lstat/edit/edit.cgi
 %attr(755,root,root) /home/httpd/html/lstat/lstat.cgi
 /home/httpd/html/lstat/doc
 /home/httpd/html/lstat/images
-%attr(700,http,http) %dir /home/httpd/html/lstat/statimg
 %attr(755,root,root) %{_bindir}/lstatd
 %attr(755,root,root) %{_bindir}/security_lstat
 %{perl_sitelib}/*
