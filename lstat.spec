@@ -1,6 +1,7 @@
 # TODO:
 # - allow to show while configure where are: "w","users","sh","ipchains","df","fping","ifconfig","install","perl","chmod","iptables","uptime","htpasswd"
 #   Or guess it...
+# - make .htaccess files in /etc/lstat and symlink them into proper places...
 %include	/usr/lib/rpm/macros.perl
 Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
