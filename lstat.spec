@@ -14,7 +14,7 @@ Source2:	%{name}.conf
 Patch0:		%{name}-makefile.patch
 Patch1:		%{name}-PLD.patch
 URL:		http://lstat.sourceforge.net/
-BuildRequires:	perl
+BuildRequires:	perl-base
 BuildRequires:	perl-CGI
 BuildRequires:	rpm-perlprov
 BuildRequires:	rrdtool
