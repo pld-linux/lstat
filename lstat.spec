@@ -88,6 +88,16 @@ if [ -f %{_sysconfdir}/httpd/httpd.conf ] && \
 	fi
 fi
 
+@echo "Creating graph files..."
+${PERL} ./mkgraph ${CONFIG} $(DESTDIR)${OBJECTSDIR}
+$(DESTDIR)${PAGESDIR}
+if [ ! -f $(DESTDIR)${PAGESDIR}index.pg ]; then \
+${INSTALL} -p -m 644 ${SRCDIR}/pages/index.pg
+$(DESTDIR)${PAGESDIR};\
+${INSTALL} -p -m 644 ${SRCDIR}/pages/user.config
+$(DESTDIR)${PAGESDIR};\
+fi;
+
 %preun
 if [ "$1" = 0 ]; then
         if [ -f /var/lock/subsys/lstatd ]; then
@@ -120,8 +130,6 @@ fi
 %{perl_sitelib}/*
 %dir %{_pkglibdir}/rrd
 %attr(700,http,http) %dir %{_pkglibdir}/objects
-%attr(644,http,http) %{_pkglibdir}/objects/*
 %attr(700,http,http) %dir %{_pkglibdir}/pages
-%attr(644,http,http) %verify(not size mtime md5) %{_pkglibdir}/pages/*
 %dir %{_pkglibdir}/templates
 %{_pkglibdir}/templates/*
