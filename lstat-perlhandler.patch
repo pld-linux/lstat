@@ -1,12 +1,13 @@
-diff -burN lstat-2.3.2.orig/src/misc/lstat.conf.mp.in lstat-2.3.2/src/misc/lstat.conf.mp.in
---- lstat-2.3.2.orig/src/misc/lstat.conf.mp.in	2004-11-14 16:36:55.525331744 +0100
-+++ lstat-2.3.2/src/misc/lstat.conf.mp.in	2004-11-14 16:39:01.042250272 +0100
-@@ -6,7 +6,7 @@
+diff -ur lstat-2.3.2.orig/src/misc/lstat.conf.mp.in lstat-2.3.2/src/misc/lstat.conf.mp.in
+--- lstat-2.3.2.orig/src/misc/lstat.conf.mp.in	2002-11-22 13:11:31.000000000 +0100
++++ lstat-2.3.2/src/misc/lstat.conf.mp.in	2004-11-15 03:22:36.369874520 +0100
+@@ -6,7 +6,8 @@
  #for execute CGI files
  Options ExecCGI
  AddHandler perl-script .cgi
 -PerlHandler ModPerl::Registry::handler
 +PerlHandler ModPerl::Registry
++DirectoryIndex lstat.cgi
  
  AllowOverride AuthConfig Limit
  </Directory>
