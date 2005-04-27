@@ -2,12 +2,15 @@
 # - allow to show while configure where are: "w","users","sh","ipchains","df","fping","ifconfig","install","perl","chmod","iptables","uptime","htpasswd"
 #   Or guess it...
 # - make .htaccess files in /etc/lstat and symlink them into proper places...
+# Conditional build:
+%bcond_with	apache1
+#
 %include	/usr/lib/rpm/macros.perl
 Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
 Name:		lstat
 Version:	2.3.2
-Release:	9
+Release:	10
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
@@ -18,7 +21,7 @@ Patch0:		%{name}-makefile.patch
 Patch1:		%{name}-PLD.patch
 Patch2:		%{name}-perlhandler.patch
 URL:		http://lstat.sourceforge.net/
-BuildRequires:	apache-mod_auth
+BuildRequires:	apache%{?with_apache1:1}-mod_auth
 BuildRequires:	perl-base
 BuildRequires:	perl-CGI
 BuildRequires:	rpm-perlprov
@@ -30,9 +33,15 @@ Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun):	grep
 Requires(preun):	apache
 Requires(preun):	fileutils
+%if %{with apache1}
+Requires:	apache1-mod_auth
+Requires:	apache1-mod_dir
+Requires:	apache1-mod_perl
+%else
 Requires:	apache-mod_auth
 Requires:	apache-mod_dir
 Requires:	apache-mod_perl
+%endif
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -41,7 +50,11 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_wwwuser		http
 %define		_wwwgroup		http
 %define		_wwwrootdir		/usr/share
+%if %{with apache1}
+%define		_httpdconf		/etc/apache/apache.conf
+%else
 %define		_httpdconf		/etc/httpd/httpd.conf/httpd.conf
+%endif
 
 %description
 LinuxStat is for generating and displaying different statistics of
@@ -72,7 +85,12 @@ parametry systemu.
 %build
 %{__perl} ./configure \
 	--apache \
+%if %{with apache1}
+	--mod_perl1 \
+	--with-lstatconf=/etc/apache/conf.d/ \
+%else
 	--mod_perl2 \
+%endif
 	--with-httpdconf=%{_httpdconf} \
 	--with-prefix=%{_prefix} \
 	--with-bin=%{_bindir} \
@@ -98,7 +116,11 @@ install -d $RPM_BUILD_ROOT%{_initdir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_initdir}/lstatd
 
+%if %{with apache1}
+sed -i -e "s#lstat/#lstat#g" $RPM_BUILD_ROOT%{_sysconfdir}/apache/conf.d/lstat.conf
+%else
 sed -i -e "s#lstat/#lstat#g" $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/lstat.conf
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -111,9 +133,16 @@ else
 	echo "Run \"/etc/rc.d/init.d/lstatd start\" to start counting statistics."
 fi
 
+
+%if %{with apache1}
+if [ -f /var/lock/subsys/apache ]; then
+	/etc/rc.d/init.d/apache restart 1>&2
+fi
+%else
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 fi
+%endif
 /usr/bin/Mkgraph.pl
 
 %preun
@@ -124,12 +153,29 @@ then
 	fi
 
 /sbin/chkconfig --del lstatd
+%if %{with apache1}
+	if [ -f /var/lock/subsys/apache ]; then
+		/etc/rc.d/init.d/apache restart 1>&2
+	fi
+%else
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
+%endif
 fi
 
 %triggerpostun -- %{name} <= 1:2.3.3-5
+%if %{with apache1}
+if [ -s /etc/apache/conf.d/lstat.conf ]; then
+	sed -i -e "s#/home/services/apache/lstat/#/usr/share/lstat/#g" /etc/apache/conf.d/lstat.conf
+fi
+if [ -s /etc/lstat/config ]; then
+	sed -i -e "s#/home/services/apache/lstat/#/usr/share/lstat/#g" /etc/lstat/config
+fi
+if [ -s /home/services/apache/lstat/.htaccess ]; then
+	mv /home/services/apache/lstat/.htaccess /usr/share/lstat/
+fi
+%else
 if [ -s /etc/httpd/httpd.conf/lstat.conf ]; then
 	sed -i -e "s#/home/services/httpd/lstat/#/usr/share/lstat/#g" /etc/httpd/httpd.conf/lstat.conf
 fi
@@ -139,6 +185,7 @@ fi
 if [ -s /home/services/httpd/lstat/.htaccess ]; then
 	mv /home/services/httpd/lstat/.htaccess /usr/share/lstat/
 fi
+%endif
 
 %files
 %defattr(644,root,root,755)
@@ -146,7 +193,11 @@ fi
 %attr(754,root,root) %{_initdir}/lstatd
 %dir %{_sysconfdir}/lstat
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/lstat/config
+%if %{with apache1}
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/apache/conf.d/lstat.conf
+%else
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/lstat.conf
+%endif
 %dir %{_wwwrootdir}/lstat
 %dir %{_wwwrootdir}/lstat/doc
 %dir %{_wwwrootdir}/lstat/icons
