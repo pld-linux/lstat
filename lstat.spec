@@ -2,6 +2,8 @@
 # - allow to show while configure where are: "w","users","sh","ipchains","df","fping","ifconfig","install","perl","chmod","iptables","uptime","htpasswd"
 #   Or guess it...
 # - make .htaccess files in /etc/lstat and symlink them into proper places...
+# - /usr/share/lstat/statimg should be in /var?
+# - /en/ docs in .pl?
 # Conditional build:
 %bcond_with	apache1
 #
