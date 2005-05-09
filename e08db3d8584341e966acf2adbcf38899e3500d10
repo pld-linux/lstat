@@ -1,0 +1,1 @@
+- added %{_sysconfdir}/httpd/lstat.conf to %files
