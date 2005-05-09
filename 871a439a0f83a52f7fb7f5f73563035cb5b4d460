@@ -1,0 +1,4 @@
+- Requires: apache-mod_auth
+- added patch
+  TODO:
+- security_lstat - not working correctly
