@@ -1,0 +1,2 @@
+- added %verify(not size mtime md5) to %{_pkglibdir}/pages/*
+- release 2, STBR
