@@ -1,0 +1,18 @@
+--- /usr/bin/security_lstat~	2005-05-09 11:00:34.353807649 +0300
++++ ./src/security_lstat.in	2005-05-09 11:00:35.996537770 +0300
+@@ -176,6 +176,8 @@
+ unlink ($htread);
+ unlink ($htedit);
+ 
++# XXX no restriction AT THIS TIME MOMENT (between unlink and create new file!!!)
++
+ create_httaccess ('LinuxStat', $htread, \@ipread, $satisfyread, $userread, $passread) if (! $noread);
+ create_httaccess ('LinuxStat-Edit', $htedit, \@ipedit, $satisfyedit, $useredit, $passedit) if ((! $noedit) && ( ! $same));
+ 
+@@ -274,5 +276,5 @@
+  }
+  print FILE "satisfy $satisfy\n" if (defined ($satisfy));
+  close FILE;
+-
++ chmod 0644, $htfile;
+ }
