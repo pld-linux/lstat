@@ -1,0 +1,4 @@
+- fixed %post, in spec's we use % not $ :)
+- first we need mkgraph before we use it in %post so i
+  add instaling it and added to %files
+- i think that now everythnig is ok so STBR
