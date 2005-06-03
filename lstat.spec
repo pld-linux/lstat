@@ -12,7 +12,7 @@ Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
 Name:		lstat
 Version:	2.3.2
-Release:	10.1
+Release:	10.2
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
@@ -119,6 +119,8 @@ install -d $RPM_BUILD_ROOT%{_initdir}
 	DESTDIR=$RPM_BUILD_ROOT
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_initdir}/lstatd
+rm -rf $RPM_BUILD_ROOT%{_wwwrootdir}/lstat/doc
+ln -sf %{_docdir}/%{name}-%{version} $RPM_BUILD_ROOT%{_wwwrootdir}/lstat/doc
 
 %if %{with apache1}
 sed -i -e "s#lstat/#lstat#g" $RPM_BUILD_ROOT%{_sysconfdir}/apache/conf.d/lstat.conf
@@ -203,7 +205,7 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/lstat.conf
 %endif
 %dir %{_wwwrootdir}/lstat
-%dir %{_wwwrootdir}/lstat/doc
+%{_wwwrootdir}/lstat/doc
 %dir %{_wwwrootdir}/lstat/icons
 %dir %{_wwwrootdir}/lstat/skins
 %dir %{_wwwrootdir}/lstat/edit
@@ -211,7 +213,6 @@ fi
 %attr(700,http,http) %dir %{_wwwrootdir}/lstat/statimg
 %attr(755,root,root) %{_wwwrootdir}/lstat/edit/edit.cgi
 %attr(755,root,root) %{_wwwrootdir}/lstat/lstat.cgi
-%{_wwwrootdir}/lstat/doc/*
 %{_wwwrootdir}/lstat/skins/*
 %{_wwwrootdir}/lstat/icons/*
 %attr(755,root,root) %{_bindir}/lstatd
