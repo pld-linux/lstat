@@ -131,6 +131,9 @@ sed -i -e "s#lstat/#lstat#g" $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/lsta
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%pre
+test -h %{_wwwrootdir}/lstat/doc || rm -rf %{_wwwrootdir}/lstat/doc
+
 %post
 /sbin/chkconfig --add lstatd
 if [ -f /var/lock/subsys/lstatd ]; then
