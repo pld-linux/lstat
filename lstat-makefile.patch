@@ -10,7 +10,7 @@ diff -urN lstat-2.2.orig/Makefile.in lstat-2.2/Makefile.in
  
  install_files:
  	@echo "Instaling  library files..."
-@@ -65,9 +65,9 @@
+@@ -69,9 +69,9 @@
  	echo ;\
  	fi;
  
@@ -22,7 +22,7 @@ diff -urN lstat-2.2.orig/Makefile.in lstat-2.2/Makefile.in
  
  	@if [ ! -f $(DESTDIR)${PAGESDIR}index.pg ]; then \
  	${INSTALL} -m 644 ${SRCDIR}/pages/index.pg $(DESTDIR)${PAGESDIR} ;\
-@@ -97,7 +97,7 @@
+@@ -101,7 +101,7 @@
  	@${INSTALL} -p -m 644 ${SRCDIR}/images/skins/sky/uni/* $(DESTDIR)${WWWDIR}/skins/sky/uni
  
  	@echo "Instaling CGI scripts"
@@ -31,7 +31,13 @@ diff -urN lstat-2.2.orig/Makefile.in lstat-2.2/Makefile.in
  	@${INSTALL} -d $(DESTDIR)${WWWDIR}edit
  	@${INSTALL} -p -m 755 ${SRCDIR}/lstat.cgi $(DESTDIR)${WWWDIR}
  	@${INSTALL} -p -m 755 ${SRCDIR}/edit.cgi $(DESTDIR)${WWWDIR}edit
-@@ -144,11 +144,6 @@
+@@ -152,17 +152,9 @@
+ 	echo -n "Installing init file for RedHat..." ;\
+ 	${INSTALL} -d $(DESTDIR)${INITRCDIR}; \
+ 	${INSTALL} -p -m 755 ${MISCDIR}lstatd.rh $(DESTDIR)${INITRCDIR}lstatd ; \
+-	if [ -f ${INITRCDIR}lstatd ]; then \
+-	/sbin/chkconfig --add lstatd ;\
+-	fi ;\
  	echo "ok";\
  	fi;
  
