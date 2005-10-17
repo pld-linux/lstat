@@ -28,7 +28,7 @@ BuildRequires:	apache%{?with_apache1:1}-mod_auth
 BuildRequires:	perl-base
 BuildRequires:	perl-CGI
 BuildRequires:	rpm-perlprov
-BuildRequires:	rrdtool
+BuildRequires:	perl-rrdtool
 BuildRequires:	sed >= 4.0
 PreReq:		webserver
 PreReq:		perl-base
