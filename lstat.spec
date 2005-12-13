@@ -25,17 +25,17 @@ Patch2:		%{name}-perlhandler.patch
 Patch3:		%{name}-permission.patch
 URL:		http://lstat.sourceforge.net/
 BuildRequires:	apache%{?with_apache1:1}-mod_auth
-BuildRequires:	perl-base
 BuildRequires:	perl-CGI
-BuildRequires:	rpm-perlprov
+BuildRequires:	perl-base
 BuildRequires:	perl-rrdtool
+BuildRequires:	rpm-perlprov
 BuildRequires:	sed >= 4.0
-PreReq:		webserver
-PreReq:		perl-base
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun):	grep
 Requires(preun):	apache
 Requires(preun):	fileutils
+Requires:	perl-base
+Requires:	webserver
 %if %{with apache1}
 Requires:	apache1-mod_auth
 Requires:	apache1-mod_dir
@@ -201,11 +201,11 @@ fi
 %doc src/doc/*
 %attr(754,root,root) %{_initdir}/lstatd
 %dir %{_sysconfdir}/lstat
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/lstat/config
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lstat/config
 %if %{with apache1}
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/apache/conf.d/lstat.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache/conf.d/lstat.conf
 %else
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/httpd.conf/lstat.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd/httpd.conf/lstat.conf
 %endif
 %dir %{_wwwrootdir}/lstat
 %{_wwwrootdir}/lstat/doc
