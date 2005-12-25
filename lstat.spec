@@ -1,50 +1,34 @@
 # TODO:
-# - allow to show while configure where are: "w","users","sh","ipchains","df","fping","ifconfig","install","perl","chmod","iptables","uptime","htpasswd"
-#   Or guess it...
+# - allow to show while configure where are: "w","users","sh","ipchains","df","fping","ifconfig",
+#   "install","perl","chmod","iptables","uptime","htpasswd" Or guess it...
 # - make .htaccess files in /etc/lstat and symlink them into proper places...
 # - /usr/share/lstat/statimg should be in /var?
 # - /en/ docs in .pl?
-# Conditional build:
-%bcond_with	apache1
 #
 %include	/usr/lib/rpm/macros.perl
 Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
 Name:		lstat
 Version:	2.3.2
-Release:	10.2
+Release:	10.6
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
 Source0:	http://dl.sourceforge.net/lstat/%{name}-%{version}.tar.gz
 # Source0-md5:	3298fa1dcdde38017b5a89f736f439f3
 Source1:	%{name}.init
+Source2:	%{name}.conf
 Patch0:		%{name}-makefile.patch
 Patch1:		%{name}-PLD.patch
 Patch2:		%{name}-perlhandler.patch
 Patch3:		%{name}-permission.patch
 URL:		http://lstat.sourceforge.net/
-BuildRequires:	apache%{?with_apache1:1}-mod_auth
 BuildRequires:	perl-CGI
 BuildRequires:	perl-base
 BuildRequires:	perl-rrdtool
 BuildRequires:	rpm-perlprov
 BuildRequires:	sed >= 4.0
 Requires(post,preun):	/sbin/chkconfig
-Requires(post,preun):	grep
-Requires(preun):	apache
-Requires(preun):	fileutils
-Requires:	perl-base
-Requires:	webserver
-%if %{with apache1}
-Requires:	apache1-mod_auth
-Requires:	apache1-mod_dir
-Requires:	apache1-mod_perl
-%else
-Requires:	apache-mod_auth
-Requires:	apache-mod_dir
-Requires:	apache-mod_perl
-%endif
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -52,12 +36,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_pkglibdir		/var/lib/%{name}
 %define		_wwwuser		http
 %define		_wwwgroup		http
-%define		_wwwrootdir		/usr/share
-%if %{with apache1}
-%define		_httpdconf		/etc/apache/apache.conf
-%else
-%define		_httpdconf		/etc/httpd/httpd.conf/httpd.conf
-%endif
+%define		_wwwrootdir		/usr/share/%{name}
+%define		_webapps	/etc/webapps
+%define		_webapp		%{name}
+%define		_httpdconf	%{_webapps}/%{_webapp}
 
 %description
 LinuxStat is for generating and displaying different statistics of
@@ -79,6 +61,19 @@ dotycz±cych pakietów przesy³anych przez routery zbudowane w oparciu o
 system Linux. Przy okazji zosta³y dodane wykresy obrazuj±ce inne
 parametry systemu.
 
+%package cgi
+Summary:	CGI webinterface for lstat
+Group:		Applications/WWW
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	apache(mod_auth)
+Requires:	apache(mod_dir)
+Requires:	apache(mod_perl)
+Requires:	webapps
+Requires:	webserver = apache
+
+%description cgi
+CGI webinterface for lstat
+
 %prep
 %setup -q
 %patch0 -p1
@@ -87,20 +82,15 @@ parametry systemu.
 %patch3 -p1
 
 %build
+# specify random mod_perl, we use own apache config anyway.
 %{__perl} ./configure \
-	--apache \
-%if %{with apache1}
-	--mod_perl1 \
-	--with-lstatconf=/etc/apache/conf.d/ \
-%else
 	--mod_perl2 \
-%endif
-	--with-httpdconf=%{_httpdconf} \
+	--with-httpdconf=%{_httpdconf}/ \
 	--with-prefix=%{_prefix} \
 	--with-bin=%{_bindir} \
 	--with-lib=%{perl_vendorlib} \
 	--with-etc=%{_sysconfdir}/lstat \
-	--with-www=%{_wwwrootdir}/lstat \
+	--with-www=%{_wwwrootdir} \
 	--with-rrd=%{_pkglibdir}/rrd \
 	--with-pages=%{_pkglibdir}/pages \
 	--with-objects=%{_pkglibdir}/objects \
@@ -113,26 +103,25 @@ parametry systemu.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_initdir}
+install -d $RPM_BUILD_ROOT{%{_initdir},%{_wwwrootdir}}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_initdir}/lstatd
-rm -rf $RPM_BUILD_ROOT%{_wwwrootdir}/lstat/doc
-ln -sf %{_docdir}/%{name}-%{version} $RPM_BUILD_ROOT%{_wwwrootdir}/lstat/doc
+rm -rf $RPM_BUILD_ROOT%{_wwwrootdir}/doc
+ln -sf %{_docdir}/%{name}-%{version} $RPM_BUILD_ROOT%{_wwwrootdir}/doc
 
-%if %{with apache1}
-sed -i -e "s#lstat/#lstat#g" $RPM_BUILD_ROOT%{_sysconfdir}/apache/conf.d/lstat.conf
-%else
-sed -i -e "s#lstat/#lstat#g" $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf/lstat.conf
-%endif
+install %{SOURCE2} $RPM_BUILD_ROOT%{_httpdconf}/httpd.conf
+install %{SOURCE2} $RPM_BUILD_ROOT%{_httpdconf}/apache.conf
+
+rm -f $RPM_BUILD_ROOT%{_httpdconf}/lstat.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-test -h %{_wwwrootdir}/lstat/doc || rm -rf %{_wwwrootdir}/lstat/doc
+test -h %{_wwwrootdir}/doc || rm -rf %{_wwwrootdir}/doc
 
 %post
 /sbin/chkconfig --add lstatd
@@ -142,39 +131,32 @@ else
 	echo "Run \"/etc/rc.d/init.d/lstatd start\" to start counting statistics."
 fi
 
-
-%if %{with apache1}
-if [ -f /var/lock/subsys/apache ]; then
-	/etc/rc.d/init.d/apache restart 1>&2
-fi
-%else
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
-%endif
-/usr/bin/Mkgraph.pl
+# this will fail if /proc not mounted
+%{_bindir}/Mkgraph.pl || :
 
 %preun
-if [ "$1" = 0 ]
-then
+if [ "$1" = 0 ]; then
 	if [ -f /var/lock/subsys/lstatd ]; then
 		/etc/rc.d/init.d/lstatd stop >&2
 	fi
-
-/sbin/chkconfig --del lstatd
-%if %{with apache1}
-	if [ -f /var/lock/subsys/apache ]; then
-		/etc/rc.d/init.d/apache restart 1>&2
-	fi
-%else
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-%endif
+	/sbin/chkconfig --del lstatd
 fi
 
+
+%triggerin cgi -- apache1
+%webapp_register apache %{_webapp}
+
+%triggerun cgi -- apache1
+%webapp_unregister apache %{_webapp}
+
+%triggerin cgi -- apache >= 2.0.0
+%webapp_register httpd %{_webapp}
+
+%triggerun cgi -- apache >= 2.0.0
+%webapp_unregister httpd %{_webapp}
+
 %triggerpostun -- %{name} <= 1:2.3.3-5
-%if %{with apache1}
+# FIXME: the version in trigger never released?
 if [ -s /etc/apache/conf.d/lstat.conf ]; then
 	sed -i -e "s#/home/services/apache/lstat/#/usr/share/lstat/#g" /etc/apache/conf.d/lstat.conf
 fi
@@ -184,7 +166,7 @@ fi
 if [ -s /home/services/apache/lstat/.htaccess ]; then
 	mv /home/services/apache/lstat/.htaccess /usr/share/lstat/
 fi
-%else
+
 if [ -s /etc/httpd/httpd.conf/lstat.conf ]; then
 	sed -i -e "s#/home/services/httpd/lstat/#/usr/share/lstat/#g" /etc/httpd/httpd.conf/lstat.conf
 fi
@@ -194,7 +176,18 @@ fi
 if [ -s /home/services/httpd/lstat/.htaccess ]; then
 	mv /home/services/httpd/lstat/.htaccess /usr/share/lstat/
 fi
-%endif
+
+%triggerpostun -- %{name} < 1:2.3.2-10.3
+# we put trigger on main package, because we can't trigger in new package
+# this will create .rpmnew files when one installs -cgi package. but that's more than okay
+if [ -f /etc/httpd/httpd.conf/lstat.conf.rpmsave ]; then
+	install -d %{_httpdconf}
+	mv -f /etc/httpd/httpd.conf/lstat.conf.rpmsave %{_httpdconf}/httpd.conf
+fi
+
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd reload 1>&2
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -202,22 +195,7 @@ fi
 %attr(754,root,root) %{_initdir}/lstatd
 %dir %{_sysconfdir}/lstat
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lstat/config
-%if %{with apache1}
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache/conf.d/lstat.conf
-%else
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd/httpd.conf/lstat.conf
-%endif
-%dir %{_wwwrootdir}/lstat
-%{_wwwrootdir}/lstat/doc
-%dir %{_wwwrootdir}/lstat/icons
-%dir %{_wwwrootdir}/lstat/skins
-%dir %{_wwwrootdir}/lstat/edit
-%dir %{_pkglibdir}
-%attr(700,http,http) %dir %{_wwwrootdir}/lstat/statimg
-%attr(755,root,root) %{_wwwrootdir}/lstat/edit/edit.cgi
-%attr(755,root,root) %{_wwwrootdir}/lstat/lstat.cgi
-%{_wwwrootdir}/lstat/skins/*
-%{_wwwrootdir}/lstat/icons/*
+
 %attr(755,root,root) %{_bindir}/lstatd
 %attr(755,root,root) %{_bindir}/show_filters
 %attr(755,root,root) %{_bindir}/security_lstat
@@ -229,3 +207,21 @@ fi
 %attr(700,http,http) %{_pkglibdir}/pages/*
 %dir %{_pkglibdir}/templates
 %{_pkglibdir}/templates/*
+
+%files cgi
+%defattr(644,root,root,755)
+%dir %attr(750,root,http) %{_httpdconf}
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_httpdconf}/apache.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_httpdconf}/httpd.conf
+
+%dir %{_wwwrootdir}
+%{_wwwrootdir}/doc
+%dir %{_wwwrootdir}/icons
+%dir %{_wwwrootdir}/skins
+%dir %{_wwwrootdir}/edit
+%dir %{_pkglibdir}
+%attr(770,root,http) %dir %{_wwwrootdir}/statimg
+%attr(755,root,root) %{_wwwrootdir}/edit/edit.cgi
+%attr(755,root,root) %{_wwwrootdir}/lstat.cgi
+%{_wwwrootdir}/skins/*
+%{_wwwrootdir}/icons/*
