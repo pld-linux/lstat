@@ -1,0 +1,2 @@
+- add bcond for building lstat with support for apache1 (patch from
+  Marcin Sztolcman msztolcman (at) post.pl)
