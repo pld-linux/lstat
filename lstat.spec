@@ -63,6 +63,7 @@ parametry systemu.
 
 %package cgi
 Summary:	CGI webinterface for lstat
+Summary(pl):	Interfejs WWW (CGI) do lstata
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	apache(mod_auth)
@@ -72,7 +73,10 @@ Requires:	webapps
 Requires:	webserver = apache
 
 %description cgi
-CGI webinterface for lstat
+CGI webinterface for lstat.
+
+%description cgi -l pl
+Interfejs WWW (CGI) do lstata.
 
 %prep
 %setup -q
@@ -141,7 +145,6 @@ if [ "$1" = 0 ]; then
 	fi
 	/sbin/chkconfig --del lstatd
 fi
-
 
 %triggerin cgi -- apache1
 %webapp_register apache %{_webapp}
