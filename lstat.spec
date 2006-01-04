@@ -4,13 +4,12 @@
 # - make .htaccess files in /etc/lstat and symlink them into proper places...
 # - /usr/share/lstat/statimg should be in /var?
 # - /en/ docs in .pl?
-#
 %include	/usr/lib/rpm/macros.perl
 Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
 Name:		lstat
 Version:	2.3.2
-Release:	10.6
+Release:	11
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
@@ -27,6 +26,7 @@ BuildRequires:	perl-CGI
 BuildRequires:	perl-base
 BuildRequires:	perl-rrdtool
 BuildRequires:	rpm-perlprov
+BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	sed >= 4.0
 Requires(post,preun):	/sbin/chkconfig
 BuildArch:	noarch
@@ -190,9 +190,7 @@ if [ -f /etc/httpd/httpd.conf/lstat.conf.rpmsave ]; then
 	mv -f /etc/httpd/httpd.conf/lstat.conf.rpmsave %{_httpdconf}/httpd.conf
 fi
 
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd reload 1>&2
-fi
+%service httpd reload
 
 %files
 %defattr(644,root,root,755)
