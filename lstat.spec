@@ -69,6 +69,8 @@ Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	apache(mod_auth)
 Requires:	apache(mod_dir)
 Requires:	apache(mod_perl)
+#Suggests:	apache(mod_perl)
+#Suggests:	apache(mod_cgi)
 Requires:	webapps
 Requires:	webserver = apache
 
