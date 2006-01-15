@@ -9,7 +9,7 @@ Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
 Name:		lstat
 Version:	2.3.2
-Release:	11
+Release:	12
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
