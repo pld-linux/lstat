@@ -154,10 +154,10 @@ fi
 %triggerun cgi -- apache1
 %webapp_unregister apache %{_webapp}
 
-%triggerin cgi -- apache >= 2.0.0
+%triggerin cgi -- apache < 2.2.0, apache-base
 %webapp_register httpd %{_webapp}
 
-%triggerun cgi -- apache >= 2.0.0
+%triggerun cgi -- apache < 2.2.0, apache-base
 %webapp_unregister httpd %{_webapp}
 
 %triggerpostun -- %{name} <= 1:2.3.3-5
