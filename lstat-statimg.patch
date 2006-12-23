@@ -1,0 +1,86 @@
+diff -Nur lstat-2.3.2/configure lstat-2.3.2.new/configure
+--- lstat-2.3.2/configure	2004-10-23 22:16:11.000000000 +0200
++++ lstat-2.3.2.new/configure	2005-10-29 18:01:52.000000000 +0200
+@@ -41,6 +41,7 @@
+ my $rrddir="";
+ my $objectsdir="";
+ my $initrcdir="";
++my $statimgdir="";
+ 
+ my $pngurl="/lstat/";
+ my $apache=0;
+@@ -79,6 +80,7 @@
+ 	   '--with-pages=s' => \$pagesdir,
+ 	   '--with-objects=s' => \$objectsdir,
+ 	   '--with-initrc=s' => \$initrcdir,
++	   '--with-statimg=s' => \$statimgdir,
+ 	   '--with-pngurl=s' => \$pngurl,
+ 	   '--with-mountpoint=s' => \@filesystems,
+ 	   '--with-interface=s' => \@inters,
+@@ -124,6 +126,8 @@
+ addslash (\$rrddir);
+ $initrcdir='/etc/rc.d/init.d/' if (! $initrcdir);
+ addslash (\$rrddir);
++$statimgdir=$etcdir.'statimg/' if (! $statimgdir);
++addslash (\$statimgdir);
+ $httpdconf='/etc/httpd/conf/httpd.conf' if (! $httpdconf);
+ $pngurl='/lstat/' if (! $pngurl);
+ addslash (\$pngurl);
+@@ -232,6 +236,7 @@
+ $dict {"OBJECTSDIR"}=$objectsdir;
+ $dict {"RRDDIR"}=$rrddir;
+ $dict {"PAGESDIR"}=$pagesdir;
++$dict {"STATIMGDIR"}=$statimgdir;
+ $dict {"WWWDIR"}=$wwwdir;
+ $dict {"PNGURL"}=$pngurl;
+ $dict {"APACHE"}=$apache;
+@@ -338,6 +343,7 @@
+ 	--with-objects=DIR
+ 	--with-rrd=DIR
+ 	--with-initrc=DIR
++	--with-statimg=DIR
+ 	--with-www=DIR
+ 	--with-pngurl=RELATIVE_URL
+ 
+@@ -397,6 +403,9 @@
+ --with-initrc=DIR
+ program init script directory (default /etc/rc.d/init)
+ 
++--with-statimg=DIR
++program statimg directory (PNG images of graphs) (default ETCDIR/statimg)
++
+ --with-www=DIR
+ program www (HTML, images and CGI) directory (default PREFIX/www)
+ 
+diff -Nur lstat-2.3.2/Makefile.in lstat-2.3.2.new/Makefile.in
+--- lstat-2.3.2/Makefile.in	2005-10-29 20:47:30.000000000 +0200
++++ lstat-2.3.2.new/Makefile.in	2005-10-29 18:11:49.000000000 +0200
+@@ -9,6 +9,7 @@
+ TEMPLATESDIR=@@TEMPLATESDIR@@
+ OBJECTSDIR=@@OBJECTSDIR@@
+ PAGESDIR=@@PAGESDIR@@
++STATIMGDIR=@@STATIMGDIR@@
+ ETCDIR=@@ETCDIR@@
+ RRDDIR=@@RRDDIR@@
+ WWWDIR=@@WWWDIR@@
+@@ -101,7 +102,7 @@
+ 	@${INSTALL} -p -m 644 ${SRCDIR}/images/skins/sky/uni/* $(DESTDIR)${WWWDIR}/skins/sky/uni
+ 
+ 	@echo "Instaling CGI scripts"
+-	@${INSTALL} -p -m 700 -d $(DESTDIR)${WWWDIR}statimg
++	@${INSTALL} -p -m 700 -d $(DESTDIR)${STATIMGDIR}
+ 	@${INSTALL} -d $(DESTDIR)${WWWDIR}edit
+ 	@${INSTALL} -p -m 755 ${SRCDIR}/lstat.cgi $(DESTDIR)${WWWDIR}
+ 	@${INSTALL} -p -m 755 ${SRCDIR}/edit.cgi $(DESTDIR)${WWWDIR}edit
+diff -Nur lstat-2.3.2/src/lib/config.in lstat-2.3.2.new/src/lib/config.in
+--- lstat-2.3.2/src/lib/config.in	2005-10-29 20:47:30.000000000 +0200
++++ lstat-2.3.2.new/src/lib/config.in	2005-10-29 18:13:15.000000000 +0200
+@@ -9,7 +9,7 @@
+ RRD_DIR=@@RRDDIR@@
+ OBJ_DIR=@@OBJECTSDIR@@
+ PNG_DIR=@@WWWDIR@@
+-STAT_PNG_DIR=@@WWWDIR@@statimg/
++STAT_PNG_DIR=@@STATIMGDIR@@
+ PNG_URL=@@PNGURL@@
+ DOC_URL=@@PNGURL@@doc/
+ STAT_PNG_URL=@@PNGURL@@statimg/

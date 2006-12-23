@@ -1,0 +1,19 @@
+diff -Nur lstat-2.3.2/src/security_lstat.in lstat-2.3.2.new/src/security_lstat.in
+--- lstat-2.3.2/src/security_lstat.in	2005-10-29 21:31:11.000000000 +0200
++++ lstat-2.3.2.new/src/security_lstat.in	2005-10-29 21:30:56.000000000 +0200
+@@ -8,12 +8,12 @@
+ #my $wwwdir="@@ WWWDIR@@";
+ #my $usersfile="@@ ETCDIR@@users";
+ #my $htpass ="@@ htpasswd@@";
+-my $wwwdir="@@WWWDIR@@";
++my $etcdir="@@ETCDIR@@";
+ my $usersfile="@@ETCDIR@@users";
+ my $htpass ="@@htpasswd@@";
+ 
+-my $htread=$wwwdir.'.htaccess';
+-my $htedit=$wwwdir.'edit/.htaccess';
++my $htread=$etcdir.'htaccess.view';
++my $htedit=$etcdir.'htaccess.edit';
+ my $dialog='';
+ my ($key, $msg, $cmd);
+ 
