@@ -3,7 +3,7 @@
 #   "install","perl","chmod","iptables","uptime","htpasswd" Or guess it...
 %include	/usr/lib/rpm/macros.perl
 Summary:	LinuxStat is for generating and displaying different statistics
-Summary(pl):	LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
+Summary(pl.UTF-8):   LinuxStat sÅ‚uÅ¼y do generowania i prezentacji rÃ³Å¼nych statystyk
 Name:		lstat
 Version:	2.3.2
 Release:	14.1
@@ -44,25 +44,25 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 LinuxStat is for generating and displaying different statistics of
 Linux by WWW browser.
 
-%description -l pl
-Projekt LinuxStat s³u¿y do generowania i prezentacji ró¿nych statystyk
-dotycz±cych komputera z systemem Linux. Co pewien czas (np. 5 min)
-zostaje zapamiêtana warto¶æ wybranych parametrów systemu. Dziêki
+%description -l pl.UTF-8
+Projekt LinuxStat sÅ‚uÅ¼y do generowania i prezentacji rÃ³Å¼nych statystyk
+dotyczÄ…cych komputera z systemem Linux. Co pewien czas (np. 5 min)
+zostaje zapamiÄ™tana wartoÅ›Ä‡ wybranych parametrÃ³w systemu. DziÄ™ki
 zastosowaniu biblioteki RRDtool stworzonej przez Tobiego Oetikera
-(twórca projektu MRTG), zbiory danych nie zwiêkszaj± swojej objêto¶ci,
-jednocze¶nie umo¿liwiaj±c ¶ledzenie warto¶ci nawet kilka lat wstecz. W
-ka¿dej chwili mo¿na obejrzeæ wykresy pokazuj±ce zmiany interesuj±cego
-nas parametru. W tym celu wystarczy u¿yæ dowolnej przegl±darki WWW.
-Oryginalnie projekt zosta³ stworzony do analizy przepustowo¶ci ³±cz
+(twÃ³rca projektu MRTG), zbiory danych nie zwiÄ™kszajÄ… swojej objÄ™toÅ›ci,
+jednoczeÅ›nie umoÅ¼liwiajÄ…c Å›ledzenie wartoÅ›ci nawet kilka lat wstecz. W
+kaÅ¼dej chwili moÅ¼na obejrzeÄ‡ wykresy pokazujÄ…ce zmiany interesujÄ…cego
+nas parametru. W tym celu wystarczy uÅ¼yÄ‡ dowolnej przeglÄ…darki WWW.
+Oryginalnie projekt zostaÅ‚ stworzony do analizy przepustowoÅ›ci Å‚Ä…cz
 internetowych, w celu planowania rozbudowy infrastruktury
-informatycznej. Doskonale nadaje siê do prezentacji statystyk
-dotycz±cych pakietów przesy³anych przez routery zbudowane w oparciu o
-system Linux. Przy okazji zosta³y dodane wykresy obrazuj±ce inne
+informatycznej. Doskonale nadaje siÄ™ do prezentacji statystyk
+dotyczÄ…cych pakietÃ³w przesyÅ‚anych przez routery zbudowane w oparciu o
+system Linux. Przy okazji zostaÅ‚y dodane wykresy obrazujÄ…ce inne
 parametry systemu.
 
 %package cgi
 Summary:	CGI webinterface for lstat
-Summary(pl):	Interfejs WWW (CGI) do lstata
+Summary(pl.UTF-8):   Interfejs WWW (CGI) do lstata
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	apache(mod_auth)
@@ -76,7 +76,7 @@ Requires:	webserver = apache
 %description cgi
 CGI webinterface for lstat.
 
-%description cgi -l pl
+%description cgi -l pl.UTF-8
 Interfejs WWW (CGI) do lstata.
 
 %prep
