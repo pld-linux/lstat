@@ -3,7 +3,7 @@
 #   "install","perl","chmod","iptables","uptime","htpasswd" Or guess it...
 %include	/usr/lib/rpm/macros.perl
 Summary:	LinuxStat is for generating and displaying different statistics
-Summary(pl.UTF-8):   LinuxStat służy do generowania i prezentacji różnych statystyk
+Summary(pl.UTF-8):	LinuxStat służy do generowania i prezentacji różnych statystyk
 Name:		lstat
 Version:	2.3.2
 Release:	14.1
@@ -62,7 +62,7 @@ parametry systemu.
 
 %package cgi
 Summary:	CGI webinterface for lstat
-Summary(pl.UTF-8):   Interfejs WWW (CGI) do lstata
+Summary(pl.UTF-8):	Interfejs WWW (CGI) do lstata
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	apache(mod_auth)
