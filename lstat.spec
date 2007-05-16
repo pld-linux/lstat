@@ -252,7 +252,7 @@ fi
 %{_wwwrootdir}/skins
 %dir %{_wwwrootdir}/edit
 %attr(755,root,root) %{_wwwrootdir}/edit/edit.cgi
-%{_wwwrootdir}/lstat/edit/.htaccess
+%{_wwwrootdir}/edit/.htaccess
 %{_wwwrootdir}/statimg
 %attr(755,root,root) %{_wwwrootdir}/lstat.cgi
 %{_wwwrootdir}/.htaccess
