@@ -1,0 +1,24 @@
+--- x/src/security_lstat.in	2006-10-01 19:28:08.000000000 +0200
++++ x/src/security_lstat.in	2007-05-24 21:56:29.000000000 +0200
+@@ -178,8 +178,8 @@
+ 
+ # XXX no restriction AT THIS TIME MOMENT (between unlink and create new file!!!)
+ 
+-create_httaccess ('LinuxStat', $htread, \@ipread, $satisfyread, $userread, $passread) if (! $noread);
+-create_httaccess ('LinuxStat-Edit', $htedit, \@ipedit, $satisfyedit, $useredit, $passedit) if ((! $noedit) && ( ! $same));
++create_httaccess ('LinuxStat', $htread, \@ipread, $satisfyread, $userread, $passread);
++create_httaccess ('LinuxStat-Edit', $htedit, \@ipedit, $satisfyedit, $useredit, $passedit) if (!$same);
+ 
+ #remove Lock FILE if exists
+ my $lockfile= $sysconfig{'LSTAT_LCK'};
+@@ -274,6 +274,10 @@
+   print `$htpass -m -b $flags $usersfile $user $pass`;
+   chmod 0644, $usersfile;
+  }
++ if (!@$ipref && !defined ($user)) {
++  #no auth
++  print FILE "Order deny,allow\nallow from all\n";
++ }
+  print FILE "satisfy $satisfy\n" if (defined ($satisfy));
+  close FILE;
+  chmod 0644, $htfile;
