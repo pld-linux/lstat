@@ -1,0 +1,11 @@
+--- lstat-2.3.2/src/Mkgraph.pl.in.orig	2007-11-24 12:15:00.979960758 +0100
++++ lstat-2.3.2/src/Mkgraph.pl.in	2007-11-24 12:15:42.473630637 +0100
+@@ -35,7 +35,7 @@
+ if ($mounts && (! $mountsinfo)) {
+ #autodetect
+ my @filesystems;
+-@content = `$df -l -T -x smbfs -x nfs -x supermount` ;
++@content = `$df -P -l -T -x smbfs -x nfs -x supermount` ;
+ #print @content;
+ foreach (@content) {
+  chomp;
