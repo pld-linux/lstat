@@ -11,7 +11,8 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-lstatd="/usr/bin/lstatd"
+lstatd_name="lstatd.pl"
+lstatd="/usr/bin/$lstatd_name"
 pidfile=/var/run/lstatd.pid
 flags=''
 
@@ -23,7 +24,7 @@ case "$1" in
 		msg_starting lstatd
 		daemon $lstatd $flags
 		RETVAL=$?
-		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/lstatd && pidof -x lstatd > $pidfile
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/lstatd && pidof -x $lstatd_name > $pidfile
 	else
 		msg_already_running lstatd
 	fi
@@ -43,7 +44,7 @@ case "$1" in
 	exit $?
 	;;
   status)
-	status lstatd
+	status $lstatd_name
 	exit $?
 	;;
   debug)
