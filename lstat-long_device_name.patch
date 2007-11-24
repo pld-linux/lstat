@@ -9,3 +9,14 @@
  #print @content;
  foreach (@content) {
   chomp;
+--- lstat-2.3.2/src/lib/Std_obj.pm.in.orig	2007-11-24 15:42:30.080772374 +0100
++++ lstat-2.3.2/src/lib/Std_obj.pm.in	2007-11-24 15:45:00.557816157 +0100
+@@ -945,7 +945,7 @@
+ if (-x $df ) {
+ #start collect info about mounted partitions
+ my $start = time;
+-my @mounted =`$df`;
++my @mounted =`$df -P`;
+ #"pozbycie sie pierwszej linijki opisu
+ shift @mounted; #without first line
+ foreach (@mounted) {
