@@ -1,12 +1,16 @@
 # TODO:
 # - allow to show while configure where are: "w","users","sh","ipchains","df","fping","ifconfig",
 #   "install","perl","chmod","iptables","uptime","htpasswd" Or guess it...
+# - use %lang for %doc/{pl,en}
+# - doc/*/flag*.gif shouldn't be %doc
+# - don't package doc/en
+#
 %include	/usr/lib/rpm/macros.perl
 Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl.UTF-8):	LinuxStat służy do generowania i prezentacji różnych statystyk
 Name:		lstat
 Version:	2.3.2
-Release:	15
+Release:	16
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
@@ -137,6 +141,8 @@ ln -sf %{_sysconfdir}/lstat/htaccess.edit $RPM_BUILD_ROOT%{_wwwrootdir}/edit/.ht
 install %{SOURCE2} $RPM_BUILD_ROOT%{_httpdconf}/httpd.conf
 install %{SOURCE2} $RPM_BUILD_ROOT%{_httpdconf}/apache.conf
 
+mv -f $RPM_BUILD_ROOT%{_bindir}/lstatd{,.pl}
+
 rm -f $RPM_BUILD_ROOT%{_httpdconf}/lstat.conf
 
 %clean
@@ -230,7 +236,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lstat/config
 %config(noreplace,missingok) %verify(not size mtime md5) %{_sysconfdir}/lstat/users
 
-%attr(755,root,root) %{_bindir}/lstatd
+%attr(755,root,root) %{_bindir}/lstatd.pl
 %attr(755,root,root) %{_bindir}/show_filters
 %attr(755,root,root) %{_bindir}/security_lstat
 %attr(755,root,root) %{_bindir}/Mkgraph.pl
