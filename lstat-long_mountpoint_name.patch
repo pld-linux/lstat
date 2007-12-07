@@ -1,0 +1,31 @@
+--- lstat-2.3.2/src/templates/standard/pl/part.orig	2007-12-07 01:18:40.858803473 +0100
++++ lstat-2.3.2/src/templates/standard/pl/part	2007-12-07 01:19:37.850109093 +0100
+@@ -3,5 +3,5 @@
+ PART_DESC=U¿ycie partycji dyskowych
+ PART_EDIT_MOUNT=Punkt mont.
+ PART_VLABEL=% pojemno¶ci
+-PART_TABLE_CAPTION=Zamontowana     Opis          Rozmiar [KB]     U¿yty       Wolny
++PART_TABLE_CAPTION=Zamontowana               Opis                   Rozmiar [KB]       U¿yty       Wolny
+ 
+--- lstat-2.3.2/src/templates/standard/en/part.orig	2007-12-07 01:18:28.360710137 +0100
++++ lstat-2.3.2/src/templates/standard/en/part	2007-12-07 01:18:37.359337340 +0100
+@@ -3,5 +3,5 @@
+ PART_DESC=Disk Partition Usage
+ PART_EDIT_MOUNT=Mount point
+ PART_VLABEL=% of size
+-PART_TABLE_CAPTION=Mounted        Desc.              Size [KB]     Used       Free
++PART_TABLE_CAPTION=Mounted                   Desc.                     Size [KB]        Used        Free
+ 
+--- lstat-2.3.2/src/lib/Std_obj.pm.in.orig	2007-12-07 01:17:13.872073846 +0100
++++ lstat-2.3.2/src/lib/Std_obj.pm.in	2007-12-07 01:17:28.869785850 +0100
+@@ -1022,8 +1022,8 @@
+   my $mountdesc = $row->{'DESC'};
+   $mountdesc='' if (! defined ($mountdesc));
+ 
+-  my $mountdesc1 = " " x (12 -length ($mountpoint)).$mountdesc;
+-  $mountdesc1 .= " " x (12 -length ($mountdesc));
++  my $mountdesc1 = " " x (22 -length ($mountpoint)).$mountdesc;
++  $mountdesc1 .= " " x (22 -length ($mountdesc));
+ 
+   push (@$Refsource,"COMMENT:$mountdesc1");
+   push (@$Refsource,"GPRINT:total$i:LAST:\%10.lf");
