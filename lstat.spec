@@ -10,7 +10,7 @@ Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl.UTF-8):	LinuxStat służy do generowania i prezentacji różnych statystyk
 Name:		lstat
 Version:	2.3.2
-Release:	16
+Release:	17
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
@@ -26,6 +26,7 @@ Patch4:		%{name}-statimg.patch
 Patch5:		%{name}-htaccess.patch
 Patch6:		%{name}-security_lstat.patch
 Patch7:		%{name}-long_device_name.patch
+Patch8:		%{name}-long_mountpoint_name.patch
 URL:		http://lstat.sourceforge.net/
 BuildRequires:	perl-CGI
 BuildRequires:	perl-base
@@ -95,6 +96,7 @@ Interfejs WWW (CGI) do lstata.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
 
 %build
 # specify random mod_perl, we use own apache config anyway.
