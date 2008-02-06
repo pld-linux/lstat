@@ -151,7 +151,7 @@ rm -f $RPM_BUILD_ROOT%{_httpdconf}/lstat.conf
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%pre
+%pretrans
 test -h %{_wwwrootdir}/doc || rm -rf %{_wwwrootdir}/doc
 test -h %{_wwwrootdir}/statimg || rm -rf %{_wwwrootdir}/lstat/statimg
 
