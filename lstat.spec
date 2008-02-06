@@ -35,6 +35,7 @@ BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	sed >= 4.0
 Requires(post,preun):	/sbin/chkconfig
+Requires:	rc-scripts
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -75,10 +76,10 @@ Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	apache(mod_auth)
 Requires:	apache(mod_dir)
 Requires:	apache(mod_perl)
-#Suggests:	apache(mod_perl)
-#Suggests:	apache(mod_cgi)
 Requires:	webapps
 Requires:	webserver = apache
+#Suggests:	apache(mod_cgi)
+#Suggests:	apache(mod_perl)
 
 %description cgi
 CGI webinterface for lstat.
@@ -156,20 +157,14 @@ test -h %{_wwwrootdir}/statimg || rm -rf %{_wwwrootdir}/lstat/statimg
 
 %post
 /sbin/chkconfig --add lstatd
-if [ -f /var/lock/subsys/lstatd ]; then
-	/etc/rc.d/init.d/lstatd restart >&2
-else
-	echo "Run \"/etc/rc.d/init.d/lstatd start\" to start counting statistics."
-fi
+%service lstatd "Counting Statistics"
 
 # this will fail if /proc not mounted
 %{_bindir}/Mkgraph.pl || :
 
 %preun
 if [ "$1" = 0 ]; then
-	if [ -f /var/lock/subsys/lstatd ]; then
-		/etc/rc.d/init.d/lstatd stop >&2
-	fi
+	%service lstatd stop
 	/sbin/chkconfig --del lstatd
 fi
 
@@ -236,7 +231,7 @@ fi
 %attr(754,root,root) %{_initdir}/lstatd
 %dir %{_sysconfdir}/lstat
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lstat/config
-%config(noreplace,missingok) %verify(not size mtime md5) %{_sysconfdir}/lstat/users
+%config(noreplace,missingok) %verify(not md5 mtime size) %{_sysconfdir}/lstat/users
 
 %attr(755,root,root) %{_bindir}/lstatd.pl
 %attr(755,root,root) %{_bindir}/show_filters
@@ -252,8 +247,8 @@ fi
 
 %files cgi
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/lstat/htaccess.view
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/lstat/htaccess.edit
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lstat/htaccess.view
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lstat/htaccess.edit
 %dir %attr(750,root,http) %{_httpdconf}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_httpdconf}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_httpdconf}/httpd.conf
