@@ -16,10 +16,7 @@ lstatd="/usr/bin/$lstatd_name"
 pidfile=/var/run/lstatd.pid
 flags=''
 
-RETVAL=0
-# See how we were called.
-case "$1" in
-  start)
+start() {
 	if [ ! -f /var/lock/subsys/lstatd ]; then
 		msg_starting lstatd
 		daemon $lstatd $flags
@@ -28,8 +25,9 @@ case "$1" in
 	else
 		msg_already_running lstatd
 	fi
-	;;
-  stop)
+}
+
+stop() {
 	if [ -f /var/lock/subsys/lstatd ]; then
 		msg_stopping lstatd
 		killproc lstatd
@@ -37,18 +35,27 @@ case "$1" in
 	else
 		msg_not_running lstatd
 	fi
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
 	;;
   restart|force-reload)
-	$0 stop
-	$0 start
-	exit $?
+	stop
+	start
 	;;
   status)
 	status $lstatd_name
 	exit $?
 	;;
   debug)
-	#set debug flag
+	# set debug flag
 	flags='-d 1'
 	$0 start
 	exit $?
