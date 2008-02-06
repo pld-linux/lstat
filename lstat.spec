@@ -10,7 +10,7 @@ Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl.UTF-8):	LinuxStat służy do generowania i prezentacji różnych statystyk
 Name:		lstat
 Version:	2.3.2
-Release:	17
+Release:	18
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
@@ -185,7 +185,7 @@ fi
 %triggerun cgi -- apache < 2.2.0, apache-base
 %webapp_unregister httpd %{_webapp}
 
-%triggerpostun -- %{name} <= 1:2.3.3-5
+%triggerpostun -- %{name} < 1:2.3.3-6
 # FIXME: the version in trigger never released?
 if [ -s /etc/apache/conf.d/lstat.conf ]; then
 	sed -i -e "s#/home/services/apache/lstat/#/usr/share/lstat/#g" /etc/apache/conf.d/lstat.conf
