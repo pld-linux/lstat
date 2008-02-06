@@ -57,13 +57,11 @@ case "$1" in
   debug)
 	# set debug flag
 	flags='-d 1'
-	$0 start
-	exit $?
+	start
 	;;
   moredebug)
 	flags='-d 2'
-	$0 start
-	exit $?
+	start
 	;;
   *)
 	msg_usage "$0 {start|stop|restart|force-reload|status|debug|moredebug}"
