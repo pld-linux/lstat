@@ -10,7 +10,7 @@ Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl.UTF-8):	LinuxStat służy do generowania i prezentacji różnych statystyk
 Name:		lstat
 Version:	2.3.2
-Release:	19
+Release:	20
 Epoch:		1
 License:	GPL
 Group:		Applications/Networking
@@ -35,14 +35,14 @@ BuildRequires:	rpm-perlprov
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	sed >= 4.0
 Requires(post,preun):	/sbin/chkconfig
+Requires:	group(http)
 Requires:	rc-scripts
+Requires:	user(http)
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_initdir	/etc/rc.d/init.d
 %define		_pkglibdir	/var/lib/%{name}
-%define		_wwwuser	http
-%define		_wwwgroup	http
 %define		_wwwrootdir	/usr/share/%{name}
 %define		_webapps	/etc/webapps
 %define		_webapp		%{name}
@@ -73,11 +73,14 @@ Summary:	CGI webinterface for lstat
 Summary(pl.UTF-8):	Interfejs WWW (CGI) do lstata
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	apache(mod_auth)
-Requires:	apache(mod_dir)
 Requires:	apache(mod_perl)
+Requires:	group(http)
+Requires:	user(http)
 Requires:	webapps
 Requires:	webserver = apache
+Requires:	webserver(alias)
+Requires:	webserver(auth)
+Requires:	webserver(indexfile)
 #Suggests:	apache(mod_cgi)
 #Suggests:	apache(mod_perl)
 
@@ -114,8 +117,8 @@ Interfejs WWW (CGI) do lstata.
 	--with-objects=%{_pkglibdir}/objects \
 	--with-statimg=%{_pkglibdir}/statimg \
 	--with-templates=%{_pkglibdir}/templates \
-	--with-wwwuser=%{_wwwuser} \
-	--with-wwwgroup=%{_wwwgroup} \
+	--with-wwwuser=http \
+	--with-wwwgroup=http \
 	--noupdate_apache_conf
 
 %{__make}
@@ -151,9 +154,10 @@ rm -f $RPM_BUILD_ROOT%{_httpdconf}/lstat.conf
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%pretrans
+%pretrans cgi
 test -h %{_wwwrootdir}/doc || rm -rf %{_wwwrootdir}/doc
 test -h %{_wwwrootdir}/statimg || rm -rf %{_wwwrootdir}/lstat/statimg
+exit 0
 
 %post
 /sbin/chkconfig --add lstatd
