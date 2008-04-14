@@ -157,7 +157,7 @@ test -h %{_wwwrootdir}/statimg || rm -rf %{_wwwrootdir}/lstat/statimg
 
 %post
 /sbin/chkconfig --add lstatd
-%service lstatd "Counting Statistics"
+%service lstatd restart
 
 # this will fail if /proc not mounted
 %{_bindir}/Mkgraph.pl || :
