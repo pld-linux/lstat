@@ -1,0 +1,19 @@
+--- /src/lib/Std_obj.pm.in.orig	2009-03-14 22:20:52.679167082 +0100
++++ /src/lib/Std_obj.pm.in	2009-03-14 22:22:10.153038369 +0100
+@@ -1489,7 +1489,7 @@
+  #safe run this command
+  $SIG{'CLD'} = "IGNORE"; #prevent zombies
+  eval {
+- open3(\*INPUT, \*OUTPUT, \*ERROR, $fping, $fpingargs);
++ $fpingpid = open3(\*INPUT, \*OUTPUT, \*ERROR, $fping, $fpingargs);
+ 
+  foreach my $RefHash (@$IPRef) {
+   print INPUT "$$RefHash{'ADDR'}\n";
+@@ -1499,6 +1499,7 @@
+  @erroutput=<ERROR>;
+  close (OUTPUT);
+  close (ERROR);
++ waitpid ($fpingpid, 0);
+ }; #end eval
+  $SIG{'CLD'} = "DEFAULT";         #restore default handler
+  
