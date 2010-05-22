@@ -13,7 +13,7 @@ Version:	2.3.2
 Release:	21
 Epoch:		1
 License:	GPL
-Group:		Applications/Networking
+Group:		Applications/System
 Source0:	http://dl.sourceforge.net/lstat/%{name}-%{version}.tar.gz
 # Source0-md5:	3298fa1dcdde38017b5a89f736f439f3
 Source1:	%{name}.init
