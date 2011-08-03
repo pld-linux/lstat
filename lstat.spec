@@ -74,15 +74,14 @@ Summary:	CGI webinterface for lstat
 Summary(pl.UTF-8):	Interfejs WWW (CGI) do lstata
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	apache(mod_perl)
 Requires:	group(http)
 Requires:	user(http)
 Requires:	webapps
-Requires:	webserver = apache
+Requires:	webserver
 Requires:	webserver(alias)
 Requires:	webserver(auth)
+Requires:	webserver(cgi)
 Requires:	webserver(indexfile)
-#Suggests:	apache(mod_cgi)
 #Suggests:	apache(mod_perl)
 
 %description cgi
