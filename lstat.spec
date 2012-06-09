@@ -82,6 +82,7 @@ Requires:	webserver(alias)
 Requires:	webserver(auth)
 Requires:	webserver(cgi)
 Requires:	webserver(indexfile)
+Requires:	webserver(mime)
 #Suggests:	apache(mod_perl)
 
 %description cgi
