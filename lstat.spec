@@ -5,7 +5,6 @@
 # - doc/*/flag*.gif shouldn't be %doc
 # - don't package doc/en
 #
-%include	/usr/lib/rpm/macros.perl
 Summary:	LinuxStat is for generating and displaying different statistics
 Summary(pl.UTF-8):	LinuxStat służy do generowania i prezentacji różnych statystyk
 Name:		lstat
